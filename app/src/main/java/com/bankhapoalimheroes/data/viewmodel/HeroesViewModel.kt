@@ -31,7 +31,7 @@ class HeroesViewModel(private val heroesRepository: HeroesRepository) : ViewMode
     }
 
     fun getSuggestedHeroesList() = viewModelScope.launch(Dispatchers.IO) {
-        when (val response = heroesRepository.getSuggestedHeroesList()) {
+        when (val response = heroesRepository.getSuggestedHeroesList(true)) {
             is NetworkResponse.Success -> {
                 mutableDataFlow.emit(MainViewModelActions.HandleHeroesList(response.body as List<HeroesListModel>))
             }
