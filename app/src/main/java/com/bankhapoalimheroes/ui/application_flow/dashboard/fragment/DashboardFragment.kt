@@ -18,7 +18,7 @@ class DashboardFragment : Fragment() {
     private lateinit var binding: FragmentDashboardBinding
 
     //Class Variables - Dependency Injection
-    private val mainViewModel = get<HeroesViewModel>()
+    private val heroesViewModel = get<HeroesViewModel>()
 
     //Class Variables - Adapter
     private lateinit var heroesAdapter: HeroesListAdapter
@@ -44,18 +44,22 @@ class DashboardFragment : Fragment() {
     }
 
 
-    private fun getData() = mainViewModel.getHeroesByName("Et")
+    private fun getData() = heroesViewModel.getHeroesByName("Et")
 
     private fun handleData() {
 
-        mainViewModel.actions.observe(viewLifecycleOwner) { result ->
+        heroesViewModel.actions.observe(viewLifecycleOwner) { result ->
             when (result) {
                 is HeroesViewModel.MainViewModelActions.HandleHeroesList -> {
-//                    Toast.makeText(requireContext(), action.modelsListResponse.toString(), Toast.LENGTH_LONG).show()
+                    heroesAdapter.submitList(null)
                     heroesAdapter.submitList(result.modelsListResponse)
                 }
                 is HeroesViewModel.MainViewModelActions.ShowGeneralError -> {
                     Toast.makeText(requireContext(), result.errorMessage, Toast.LENGTH_LONG).show()
+                }
+
+                is HeroesViewModel.MainViewModelActions.GetSuggestedList -> {
+                    heroesViewModel.getSuggestedHeroesList()
                 }
                 else -> return@observe
             }

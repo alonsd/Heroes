@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">BankHapoalimHeroes</string>
+    <string name="viewholder_heroes_separator_suggestions">Suggestions - </string>
+    <string name="viewholder_heroes_separator_search">Search - </string>
 </resources>
