@@ -1,7 +1,7 @@
 package com.bankhapoalimheroes.data.repository
 
 import com.bankhapoalimheroes.data.source.local.source.LocalDataSource
-import com.bankhapoalimheroes.data.source.remote.source.RemoteDataSource
+import com.bankhapoalimheroes.data.source.remote.source.RemoteHeroDataSource
 import com.bankhapoalimheroes.model.ui_models.heroes_list.BaseHeroListModel
 import com.bankhapoalimheroes.model.ui_models.heroes_list.HeroListSeparatorModel
 import com.bankhapoalimheroes.model.ui_models.heroes_list.HeroesListModel
@@ -15,14 +15,14 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 
 class HeroesRepository(
-    private val remoteDataSource: RemoteDataSource,
+    private val remoteHeroDataSource: RemoteHeroDataSource,
     private val localDataSource: LocalDataSource
 ) {
-
+    
     suspend fun getHeroesByNameWithSuggestions(name: String): NetworkResponse<*, String> {
         val suggestedHeroesResult = getSuggestedHeroesList(false)
         if (suggestedHeroesResult is NetworkResponse.Error) return suggestedHeroesResult
-        val heroesResult = remoteDataSource.getHeroesByName(name)
+        val heroesResult = remoteHeroDataSource.getHeroesByName(name)
         if (heroesResult is NetworkResponse.Error) return heroesResult
         val suggestedHeroesList = (suggestedHeroesResult as NetworkResponse.Success).body as List<HeroesListModel>
         val heroesListsWithSeparationModels = createHeroListWithSeparation(suggestedHeroesList)
@@ -71,7 +71,7 @@ class HeroesRepository(
     }
 
     private suspend fun getHeroesListContainingName(name: String): NetworkResponse<*, String> {
-        val heroesResult = remoteDataSource.getHeroesByName(name)
+        val heroesResult = remoteHeroDataSource.getHeroesByName(name)
         if (heroesResult is NetworkResponse.Error) return heroesResult
         val heroesListsModels = mutableListOf<HeroesListModel>()
         (heroesResult as NetworkResponse.Success).body.heroesList.forEach { hero ->

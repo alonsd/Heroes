@@ -3,7 +3,7 @@ package com.bankhapoalimheroes.data.source.remote.source
 import com.bankhapoalimheroes.data.source.remote.api.HeroesApi
 import com.bankhapoalimheroes.utils.constants.NetworkConstants
 
-class RemoteDataSource(private val heroesApi: HeroesApi) {
+class RemoteHeroDataSource(private val heroesApi: HeroesApi) {
 
     /**
      * In a real application the token would not be saved hard-coded but saved safely in local database.

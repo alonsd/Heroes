@@ -1,4 +1,4 @@
-package com.bankhapoalimheroes.model.models
+package com.bankhapoalimheroes.model.network_models
 
 
 import com.google.gson.annotations.SerializedName
@@ -7,11 +7,11 @@ data class HeroesListResponseModel(
     @SerializedName("response")
     val response: String,
     @SerializedName("results")
-    val heroesList: List<HeroResult>,
+    val heroesList: List<Hero>,
     @SerializedName("results-for")
     val resultsFor: String
 ) {
-    data class HeroResult(
+    data class Hero(
         @SerializedName("appearance")
         val appearance: Appearance,
         @SerializedName("biography")

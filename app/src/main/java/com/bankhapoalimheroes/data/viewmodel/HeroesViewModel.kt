@@ -12,18 +12,18 @@ import kotlinx.coroutines.launch
 
 class HeroesViewModel(private val heroesRepository: HeroesRepository) : ViewModel() {
 
-    private val mutableDataFlow = MutableStateFlow<MainViewModelActions>(MainViewModelActions.GetSuggestedList)
+    private val mutableDataFlow = MutableStateFlow<HeroesViewModelActions>(HeroesViewModelActions.GetSuggestedList)
     val actions = mutableDataFlow.asLiveData()
 
     fun getHeroesByName(name : String) = viewModelScope.launch(Dispatchers.IO) {
         when (val response = heroesRepository.getHeroesByNameWithSuggestions(name)) {
             is NetworkResponse.Success -> {
-                mutableDataFlow.emit(MainViewModelActions.HandleHeroesList(response.body as List<HeroesListModel>))
+                mutableDataFlow.emit(HeroesViewModelActions.HandleHeroesList(response.body as List<HeroesListModel>))
             }
 
             is NetworkResponse.Error -> {
                 response.error.message?.let { message ->
-                    mutableDataFlow.emit(MainViewModelActions.ShowGeneralError(message))
+                    mutableDataFlow.emit(HeroesViewModelActions.ShowGeneralError(message))
                 }
             }
             else -> {}
@@ -33,21 +33,21 @@ class HeroesViewModel(private val heroesRepository: HeroesRepository) : ViewMode
     fun getSuggestedHeroesList() = viewModelScope.launch(Dispatchers.IO) {
         when (val response = heroesRepository.getSuggestedHeroesList(true)) {
             is NetworkResponse.Success -> {
-                mutableDataFlow.emit(MainViewModelActions.HandleHeroesList(response.body as List<HeroesListModel>))
+                mutableDataFlow.emit(HeroesViewModelActions.HandleHeroesList(response.body as List<HeroesListModel>))
             }
 
             is NetworkResponse.Error -> {
                 response.error.message?.let { message ->
-                    mutableDataFlow.emit(MainViewModelActions.ShowGeneralError(message))
+                    mutableDataFlow.emit(HeroesViewModelActions.ShowGeneralError(message))
                 }
             }
             else -> {}
         }
     }
 
-    sealed class MainViewModelActions {
-        data class HandleHeroesList(val modelsListResponse: List<HeroesListModel>) : MainViewModelActions()
-        data class ShowGeneralError(val errorMessage: String) : MainViewModelActions()
-        object GetSuggestedList : MainViewModelActions()
+    sealed class HeroesViewModelActions {
+        data class HandleHeroesList(val modelsListResponse: List<HeroesListModel>) : HeroesViewModelActions()
+        data class ShowGeneralError(val errorMessage: String) : HeroesViewModelActions()
+        object GetSuggestedList : HeroesViewModelActions()
     }
 }

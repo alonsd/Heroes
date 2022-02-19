@@ -1,7 +1,7 @@
 package com.bankhapoalimheroes.service_locator
 
-import com.bankhapoalimheroes.BuildConfig
 import com.bankhapoalimheroes.data.source.remote.api.HeroesApi
+import com.bankhapoalimheroes.data.source.remote.api.HeroesDetailsApi
 import com.bankhapoalimheroes.utils.constants.NetworkConstants
 import com.haroldadmin.cnradapter.NetworkResponseAdapterFactory
 import okhttp3.OkHttpClient
@@ -12,7 +12,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 val networkModule = module {
     single { provideRetrofit() }
-    single { provideApi(get()) }
+    single { provideHeroesApi(get()) }
+    single { provideHeroesDetailsApi(get()) }
 }
 
 private fun provideRetrofit() =
@@ -23,7 +24,8 @@ private fun provideRetrofit() =
         .client(provideOkHttpClient())
         .build()
 
-private fun provideApi(retrofit: Retrofit): HeroesApi = retrofit.create(HeroesApi::class.java)
+private fun provideHeroesApi(retrofit: Retrofit): HeroesApi = retrofit.create(HeroesApi::class.java)
+private fun provideHeroesDetailsApi(retrofit: Retrofit): HeroesDetailsApi = retrofit.create(HeroesDetailsApi::class.java)
 
 private fun provideOkHttpClient(): OkHttpClient {
     return OkHttpClient().newBuilder().addInterceptor(HttpLoggingInterceptor().apply {

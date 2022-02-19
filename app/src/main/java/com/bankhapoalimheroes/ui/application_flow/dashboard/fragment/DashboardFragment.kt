@@ -4,13 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.SearchView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.bankhapoalimheroes.data.viewmodel.HeroesViewModel
 import com.bankhapoalimheroes.databinding.FragmentDashboardBinding
 import com.bankhapoalimheroes.ui.application_flow.dashboard.viewholder.HeroesListAdapter
-import com.bankhapoalimheroes.utils.custom_implementations.OnOnlyTextChangedListener
+import com.bankhapoalimheroes.utils.custom_implementations.OnSearchViewOnlyTextChangedListener
 import com.bankhapoalimheroes.utils.extensions.setAdapterWithItemDecoration
 import com.bankhapoalimheroes.utils.extensions.setVisiblyAsGone
 import com.bankhapoalimheroes.utils.extensions.setVisiblyAsVisible
@@ -41,10 +41,10 @@ class DashboardFragment : Fragment() {
 
     private fun init() {
         heroesAdapter = HeroesListAdapter { heroId ->
-            Toast.makeText(requireContext(), "Clicked on hero - $heroId", Toast.LENGTH_SHORT).show()
+            findNavController().navigate(DashboardFragmentDirections.actionMainFragmentToHeroesDetailsFragment(heroId))
         }
         binding.heroesRecyclerView.setAdapterWithItemDecoration(requireContext(), heroesAdapter)
-        binding.heroesSearchView.setOnQueryTextListener(object : OnOnlyTextChangedListener() {
+        binding.heroesSearchView.setOnQueryTextListener(object : OnSearchViewOnlyTextChangedListener() {
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 if (newText.isNullOrEmpty()) return false
@@ -60,17 +60,17 @@ class DashboardFragment : Fragment() {
 
         heroesViewModel.actions.observe(viewLifecycleOwner) { result ->
             when (result) {
-                is HeroesViewModel.MainViewModelActions.HandleHeroesList -> {
+                is HeroesViewModel.HeroesViewModelActions.HandleHeroesList -> {
                     heroesAdapter.submitList(result.modelsListResponse.toList())
                     binding.progressBar.visibility = View.GONE
                     binding.progressBar.setVisiblyAsGone()
                 }
-                is HeroesViewModel.MainViewModelActions.ShowGeneralError -> {
+                is HeroesViewModel.HeroesViewModelActions.ShowGeneralError -> {
                     Toast.makeText(requireContext(), result.errorMessage, Toast.LENGTH_LONG).show()
                     binding.progressBar.setVisiblyAsGone()
                 }
 
-                is HeroesViewModel.MainViewModelActions.GetSuggestedList -> {
+                is HeroesViewModel.HeroesViewModelActions.GetSuggestedList -> {
                     heroesViewModel.getSuggestedHeroesList()
                     binding.progressBar.setVisiblyAsVisible()
                 }

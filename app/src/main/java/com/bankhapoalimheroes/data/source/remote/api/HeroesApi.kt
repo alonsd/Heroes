@@ -1,6 +1,6 @@
 package com.bankhapoalimheroes.data.source.remote.api
 
-import com.bankhapoalimheroes.model.models.HeroesListResponseModel
+import com.bankhapoalimheroes.model.network_models.HeroesListResponseModel
 import com.haroldadmin.cnradapter.NetworkResponse
 import retrofit2.http.GET
 import retrofit2.http.Path

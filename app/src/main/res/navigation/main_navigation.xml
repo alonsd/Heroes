@@ -9,5 +9,18 @@
         android:id="@+id/mainFragment"
         android:name="com.bankhapoalimheroes.ui.application_flow.dashboard.fragment.DashboardFragment"
         android:label="fragment_main"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_dashboard">
+        <action
+            android:id="@+id/action_mainFragment_to_heroesDetailsFragment"
+            app:destination="@id/heroesDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/heroesDetailsFragment"
+        android:name="com.bankhapoalimheroes.ui.application_flow.dashboard.fragment.HeroesDetailsFragment"
+        android:label="HeroesDetailsFragment"
+        tools:layout="@layout/fragment_hero_details" >
+        <argument
+            android:name="heroId"
+            app:argType="string" />
+    </fragment>
 </navigation>
