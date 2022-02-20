@@ -1,5 +1,4 @@
-<img src="https://github.com/alonsd/BankHapoalimHeroes/blob/main/main_screen.jpeg" width="200"/> 
-<img src="https://github.com/alonsd/BankHapoalimHeroes/blob/main/hero_details_screen.jpeg" width="200"/> 
+<img src="https://github.com/alonsd/BankHapoalimHeroes/blob/main/main_screen.jpeg" width="300"/> <img src="https://github.com/alonsd/BankHapoalimHeroes/blob/main/hero_details_screen.jpeg" width="300"/> 
 
 # BankHapoalimHeroes
 
