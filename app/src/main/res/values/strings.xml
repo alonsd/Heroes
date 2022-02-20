@@ -9,6 +9,19 @@
 
     <!--    HeroDetailsFragment-->
     <string name="hero_details_fragment_place_of_birth">Place of Birth: %1$s</string>
+    <string name="hero_details_fragment_hero_details_for_sharing">
+        Check this cool hero!
+        \n\n
+        Name: %1$s
+        \n\n
+        Place of Birth: %2$s
+        \n\n
+        Image:
+        \n
+        %3$s
+        \n</string>
+    <string name="heroes_details_fragment_not_available">Not Available</string>
+
 
     <!--    ViewHolder Hero Card-->
     <string name="viewholder_hero_card_description">%1$s: %2$s</string>

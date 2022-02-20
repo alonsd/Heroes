@@ -7,6 +7,6 @@ import org.koin.dsl.module
 
 val repositoryModule = module {
 
-    single { HeroesRepository(get(), get()) }
+    single { HeroesRepository(get()) }
     single { HeroesDetailsRepository(get()) }
 }

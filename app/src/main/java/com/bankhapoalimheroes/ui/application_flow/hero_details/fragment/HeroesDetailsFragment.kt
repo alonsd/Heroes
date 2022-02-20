@@ -1,5 +1,6 @@
 package com.bankhapoalimheroes.ui.application_flow.hero_details.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,7 @@ import com.bankhapoalimheroes.databinding.FragmentHeroDetailsBinding
 import com.bankhapoalimheroes.model.ui_models.hero_details.HeroDetailsModel
 import com.bankhapoalimheroes.ui.application_flow.hero_details.viewholder.HeroDetailsAdapter
 import com.bankhapoalimheroes.utils.extensions.setAdapter
+import com.bankhapoalimheroes.utils.extensions.setVisiblyAsVisible
 import com.bumptech.glide.Glide
 import org.koin.android.ext.android.inject
 
@@ -28,6 +30,9 @@ class HeroesDetailsFragment : Fragment() {
     //Class Variables - Adapter
     private var adapter = HeroDetailsAdapter()
 
+    //Class Variables - Strings
+    private var heroPlaceOfBirth : String = ""
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentHeroDetailsBinding.inflate(inflater, container, false)
         return binding.root
@@ -41,9 +46,10 @@ class HeroesDetailsFragment : Fragment() {
     }
 
     private fun handleData() {
-        heroesDetailsViewModel.actions.observe(requireActivity()) { action ->
+        heroesDetailsViewModel.actions.observe(viewLifecycleOwner) { action ->
             when (action) {
                 is HeroesDetailsViewModel.HeroDetailsViewModelActions.ShowAdditionalHeroDetails -> {
+                    binding.heroDetailsFloatingActionButton.setVisiblyAsVisible()
                     handleAdditionalHeroDetails(action.heroDetailsModel)
                 }
                 is HeroesDetailsViewModel.HeroDetailsViewModelActions.ShowGeneralError -> {
@@ -55,6 +61,11 @@ class HeroesDetailsFragment : Fragment() {
     }
 
     private fun handleAdditionalHeroDetails(heroDetailsModel: HeroDetailsModel) {
+        heroPlaceOfBirth = if (heroDetailsModel.placeOfBirth.length < 2){
+            getString(R.string.heroes_details_fragment_not_available)
+        } else {
+            heroDetailsModel.placeOfBirth
+        }
         binding.heroesListHeroPlaceOfBirthTextView.text = getString(R.string.hero_details_fragment_place_of_birth,
             heroDetailsModel.placeOfBirth)
         binding.heroDetailsRecyclerView.setAdapter(requireContext(), adapter, true)
@@ -67,5 +78,22 @@ class HeroesDetailsFragment : Fragment() {
             .placeholder(R.mipmap.ic_launcher)
             .into(binding.heroDetailsHeroImageView)
         binding.heroesListHeroNameTextView.text = navArgs.heroModel.name
+        binding.heroDetailsFloatingActionButton.setOnClickListener {
+            shareHeroDetails()
+        }
+    }
+
+    private fun shareHeroDetails() {
+        val heroDetailsForSharing = getString(R.string.hero_details_fragment_hero_details_for_sharing,
+        navArgs.heroModel.name,
+        heroPlaceOfBirth,
+        navArgs.heroModel.image)
+        val sendIntent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, heroDetailsForSharing)
+            type = "text/plain"
+        }
+        val shareIntent = Intent.createChooser(sendIntent, null)
+        startActivity(shareIntent)
     }
 }
