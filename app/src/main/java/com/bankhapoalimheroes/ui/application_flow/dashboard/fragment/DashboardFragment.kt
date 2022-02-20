@@ -11,7 +11,7 @@ import com.bankhapoalimheroes.data.viewmodel.HeroesViewModel
 import com.bankhapoalimheroes.databinding.FragmentDashboardBinding
 import com.bankhapoalimheroes.ui.application_flow.dashboard.viewholder.HeroesListAdapter
 import com.bankhapoalimheroes.utils.custom_implementations.OnSearchViewOnlyTextChangedListener
-import com.bankhapoalimheroes.utils.extensions.setAdapterWithItemDecoration
+import com.bankhapoalimheroes.utils.extensions.setAdapter
 import com.bankhapoalimheroes.utils.extensions.setVisiblyAsGone
 import com.bankhapoalimheroes.utils.extensions.setVisiblyAsVisible
 import org.koin.android.ext.android.get
@@ -40,10 +40,10 @@ class DashboardFragment : Fragment() {
     }
 
     private fun init() {
-        heroesAdapter = HeroesListAdapter { heroId ->
-            findNavController().navigate(DashboardFragmentDirections.actionMainFragmentToHeroesDetailsFragment(heroId))
+        heroesAdapter = HeroesListAdapter { heroModel ->
+            findNavController().navigate(DashboardFragmentDirections.actionMainFragmentToHeroesDetailsFragment(heroModel))
         }
-        binding.heroesRecyclerView.setAdapterWithItemDecoration(requireContext(), heroesAdapter)
+        binding.heroesRecyclerView.setAdapter(requireContext(), heroesAdapter)
         binding.heroesSearchView.setOnQueryTextListener(object : OnSearchViewOnlyTextChangedListener() {
 
             override fun onQueryTextChange(newText: String?): Boolean {

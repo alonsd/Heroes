@@ -14,10 +14,10 @@ class HeroesDetailsViewModel(private val heroesDetailsRepository: HeroesDetailsR
     private val mutableDataFlow = MutableStateFlow<HeroDetailsViewModelActions>(HeroDetailsViewModelActions.EmptyValue)
     val actions = mutableDataFlow.asLiveData()
 
-    fun getHeroDetails(heroId : String) = viewModelScope.launch {
+    fun getAdditionalHeroDetails(heroId : String) = viewModelScope.launch {
         when(val response = heroesDetailsRepository.getHeroDetails(heroId)) {
             is NetworkResponse.Success -> {
-                mutableDataFlow.emit(HeroDetailsViewModelActions.ShowHeroDetails(response.body as HeroDetailsModel))
+                mutableDataFlow.emit(HeroDetailsViewModelActions.ShowAdditionalHeroDetails(response.body as HeroDetailsModel))
             }
 
             is NetworkResponse.Error -> {
@@ -31,7 +31,7 @@ class HeroesDetailsViewModel(private val heroesDetailsRepository: HeroesDetailsR
 
 
     sealed class HeroDetailsViewModelActions {
-        data class ShowHeroDetails(val heroDetailsModel: HeroDetailsModel) : HeroDetailsViewModelActions()
+        data class ShowAdditionalHeroDetails(val heroDetailsModel: HeroDetailsModel) : HeroDetailsViewModelActions()
         data class ShowGeneralError(val errorMessage: String) : HeroDetailsViewModelActions()
         object EmptyValue : HeroDetailsViewModelActions()
     }

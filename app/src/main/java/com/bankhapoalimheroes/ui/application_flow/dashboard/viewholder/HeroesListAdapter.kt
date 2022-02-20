@@ -11,7 +11,7 @@ import com.bankhapoalimheroes.model.ui_models.heroes_list.HeroesListModel
 import com.bankhapoalimheroes.model.ui_models.heroes_list.enums.HeroesListViewHolderType
 import com.bankhapoalimheroes.utils.adapter.DefaultAdapterDiffUtilCallback
 
-class HeroesListAdapter(private val onClick: (id: String) -> Unit) : androidx.recyclerview.widget.ListAdapter<BaseHeroListModel,
+class HeroesListAdapter(private val onClick: (heroModel: HeroesListModel) -> Unit) : androidx.recyclerview.widget.ListAdapter<BaseHeroListModel,
         RecyclerView.ViewHolder>(DefaultAdapterDiffUtilCallback<BaseHeroListModel>()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {

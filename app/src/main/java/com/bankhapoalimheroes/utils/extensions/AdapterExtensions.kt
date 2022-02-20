@@ -7,12 +7,17 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
 fun <T, VH : RecyclerView.ViewHolder>
-        RecyclerView.setAdapterWithItemDecoration(
+        RecyclerView.setAdapter(
     context: Context,
-    adapter: ListAdapter<T, VH>
+    adapter: ListAdapter<T, VH>,
+    orientationHorizontal: Boolean = false
 ) {
     this.adapter = adapter
     this.setHasFixedSize(true)
-    this.layoutManager = LinearLayoutManager(context)
-    this.addItemDecoration(DividerItemDecoration(context, RecyclerView.VERTICAL))
+    if (orientationHorizontal.not()) {
+        this.layoutManager = LinearLayoutManager(context)
+        this.addItemDecoration(DividerItemDecoration(context, RecyclerView.VERTICAL))
+        return
+    }
+    this.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 }

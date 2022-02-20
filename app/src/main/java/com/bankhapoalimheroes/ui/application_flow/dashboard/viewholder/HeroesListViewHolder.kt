@@ -8,12 +8,12 @@ import com.bumptech.glide.Glide
 
 class HeroesListViewHolder(
     private val binding: ViewholderHeroesListBinding,
-    private val onClick: (heroId: String) -> Unit
+    private val onClick: (heroModel: HeroesListModel) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(model: HeroesListModel) {
-        binding.heroName.text = model.name
-        Glide.with(binding.root.context).load(model.image).placeholder(R.mipmap.ic_launcher).into(binding.heroImageView)
-        binding.root.setOnClickListener { onClick(model.id) }
+        binding.heroesListHeroName.text = model.name
+        Glide.with(binding.root.context).load(model.image).placeholder(R.mipmap.ic_launcher).into(binding.heroesListHeroImageView)
+        binding.root.setOnClickListener { onClick(model) }
     }
 }

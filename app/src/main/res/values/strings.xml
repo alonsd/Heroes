@@ -1,5 +1,16 @@
 <resources>
+
+    <!--    App Name-->
     <string name="app_name">BankHapoalimHeroes</string>
+
+    <!--    ViewHolder Heroes Separator-->
     <string name="viewholder_heroes_separator_suggestions">Suggestions - </string>
     <string name="viewholder_heroes_separator_search">Search - </string>
+
+    <!--    HeroDetailsFragment-->
+    <string name="hero_details_fragment_place_of_birth">Place of Birth: %1$s</string>
+
+    <!--    ViewHolder Hero Card-->
+    <string name="viewholder_hero_card_description">%1$s: %2$s</string>
+
 </resources>

@@ -8,12 +8,12 @@
     android:background="?android:attr/selectableItemBackground">
 
     <ImageView
-        android:id="@+id/hero_image_view"
+        android:id="@+id/heroes_list_hero_image_view"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toStartOf="@+id/hero_name"
+        app:layout_constraintEnd_toStartOf="@+id/heroes_list_hero_name"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="spread_inside"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,7 +22,7 @@
         tools:ignore="ContentDescription" />
 
     <TextView
-        android:id="@+id/hero_name"
+        android:id="@+id/heroes_list_hero_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="32dp"
@@ -30,10 +30,10 @@
         android:textColor="@color/black"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/hero_image_view"
+        app:layout_constraintBottom_toBottomOf="@+id/heroes_list_hero_image_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/hero_image_view"
-        app:layout_constraintTop_toTopOf="@+id/hero_image_view"
+        app:layout_constraintStart_toEndOf="@+id/heroes_list_hero_image_view"
+        app:layout_constraintTop_toTopOf="@+id/heroes_list_hero_image_view"
         tools:text="Ethan Hunt" />
 </androidx.constraintlayout.widget.ConstraintLayout>
