@@ -1,30 +1,15 @@
-<img src="https://github.com/alonsd/BasicApplication/blob/main/Basic%20Application%20Logo.jpeg" width="800"/> 
+<img src="https://github.com/alonsd/BankHapoalimHeroes/blob/main/main_screen.jpeg" width="300"/> <img src="https://github.com/alonsd/BankHapoalimHeroes/blob/main/hero_details_screen.jpeg" width="300"/> 
 
-# BasicApplication
+# BankHapoalimHeroes
 
-No more looking for dependencies, adding permissions, configuring Koin -  this basic Android temple application has eveything you need for a fresh new Android project - 
+Bank Poalim home task for Android. 
  
-- [x] Solid MVVM architecture.
-- [x] Network layer built with Retrofit + Coroutines + error handling wrapper with a demonstrated used API in the app.
-- [x] Local database using Room library implemented and ready to use.
-- [x] Service Locator using Koin is configured and used throughout the application.
-- [x] Built for a Single-Activity application, Navigation Component is already predefined and a first fragment is already built onto it.
-- [x] Powerful generic utility class for ListAdapter to prevent creating a new DiffUtil.ItemCallback class each time you create a new list.
-- [x] SharedPreferences extension which makes saving small amounts of data extremely easy to use. 
-- [x] Very commonly used dependencies such as Gson, Room, Glide and more are already pre-defined.
-
-### Prerequisites
-This project assumes you know how to work with MVVM architecture, Retrofit networking and Kotlin Coroutines.
-
-If you do, this project can save you ALOT of time when creating a new Android project from scratch - just clone this project, change the package name, project name, generic variables to suit your naming needs and your ready to go. 
-
-### Installing
-
-Clone the project and start renaming everything. Will take approx 5~ minutes and your ready to go. 
-
-## Built With
-
-- Android Studio.
+- [x] Architecture - Model-View-ViewModel(MVVM). The data flow is UI (Fragments) -> ViewModel -> Respository -> DataSource  -> API
+- [x] Business logic is managed in the RemoteDataSource for scaleability considerations, if the application grows bigger and uses a LocalDataSource then each data source would handle it's own logic and the repository will only handle merging the results together. 
+- [x] SharedPreferences for saving last cache time. 
+- [x] Built as a single Activity application ready to scale. 
+- [x] Dependency Injection using Koin.
+- [x] Networking using Retrofit + Coroutines.
 
 ## Authors
 
