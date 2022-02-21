@@ -1,10 +1,10 @@
 package com.bankhapoalimheroes.service_locator
 
-import com.bankhapoalimheroes.data.source.remote.source.RemoteHeroDataSource
-import com.bankhapoalimheroes.data.source.remote.source.RemoteHeroDetailsDataSource
+import com.bankhapoalimheroes.data.source.remote.source.hero.RemoteHeroDataSourceImp
+import com.bankhapoalimheroes.data.source.remote.source.hero_details.RemoteHeroDetailsDataSourceImp
 import org.koin.dsl.module
 
 val remoteDataSourceModule = module {
-    single { RemoteHeroDataSource(get()) }
-    single { RemoteHeroDetailsDataSource(get()) }
+    single { RemoteHeroDataSourceImp(get()) }
+    single { RemoteHeroDetailsDataSourceImp(get()) }
 }

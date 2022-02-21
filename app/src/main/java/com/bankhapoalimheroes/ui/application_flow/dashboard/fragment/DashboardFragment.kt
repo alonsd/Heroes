@@ -7,13 +7,16 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.bankhapoalimheroes.R
 import com.bankhapoalimheroes.data.viewmodel.HeroesViewModel
 import com.bankhapoalimheroes.databinding.FragmentDashboardBinding
+import com.bankhapoalimheroes.model.network_models.HeroesListResponseModel
 import com.bankhapoalimheroes.ui.application_flow.dashboard.viewholder.HeroesListAdapter
 import com.bankhapoalimheroes.utils.custom_implementations.OnSearchViewOnlyTextChangedListener
 import com.bankhapoalimheroes.utils.extensions.setAdapter
 import com.bankhapoalimheroes.utils.extensions.setVisiblyAsGone
 import com.bankhapoalimheroes.utils.extensions.setVisiblyAsVisible
+import com.google.gson.Gson
 import org.koin.android.ext.android.get
 
 class DashboardFragment : Fragment() {
@@ -27,6 +30,7 @@ class DashboardFragment : Fragment() {
     //Class Variables - Adapter
     private lateinit var heroesAdapter: HeroesListAdapter
 
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentDashboardBinding.inflate(inflater, container, false)
         return binding.root
@@ -34,6 +38,7 @@ class DashboardFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
 
         init()
         handleData()

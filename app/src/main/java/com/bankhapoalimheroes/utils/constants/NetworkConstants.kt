@@ -7,4 +7,5 @@ object NetworkConstants {
 
     const val BASE_URL = "https://www.superheroapi.com/api/"
     const val SUCCESS_RESULT_CODE = 200
+    const val SUCCESS_RESULT_RESPONSE = "success"
 }

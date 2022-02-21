@@ -1,14 +1,14 @@
 package com.bankhapoalimheroes.data.repository
 
-import com.bankhapoalimheroes.data.source.remote.source.RemoteHeroDataSource
+import com.bankhapoalimheroes.data.source.remote.source.hero.RemoteHeroDataSourceImp
 
-class HeroesRepository(private val remoteHeroDataSource: RemoteHeroDataSource) {
+class HeroesRepository(private val remoteHeroDataSourceImp: RemoteHeroDataSourceImp) {
     
     suspend fun getHeroesByNameWithSuggestions(name: String) =
-        remoteHeroDataSource.getHeroesByNameWithSuggestions(name)
+        remoteHeroDataSourceImp.getHeroesByNameWithSuggestions(name)
 
     suspend fun getSuggestedHeroesList(addSeparation: Boolean) =
-        remoteHeroDataSource.getSuggestedHeroesList(addSeparation)
+        remoteHeroDataSourceImp.getSuggestedHeroesList(addSeparation)
 
 }
 

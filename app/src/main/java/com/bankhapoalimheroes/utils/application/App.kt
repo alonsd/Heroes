@@ -10,7 +10,7 @@ import org.koin.core.context.startKoin
 class App : Application() {
 
     companion object {
-        public lateinit var instance: App
+        lateinit var instance: App
     }
 
     override fun onCreate() {

@@ -1,29 +1,35 @@
-package com.bankhapoalimheroes.data.source.remote.source
+package com.bankhapoalimheroes.data.source.remote.source.hero
 
+import com.bankhapoalimheroes.R
 import com.bankhapoalimheroes.data.source.remote.api.HeroesApi
 import com.bankhapoalimheroes.model.ui_models.heroes_list.BaseHeroListModel
 import com.bankhapoalimheroes.model.ui_models.heroes_list.HeroListSeparatorModel
 import com.bankhapoalimheroes.model.ui_models.heroes_list.HeroesListModel
 import com.bankhapoalimheroes.model.ui_models.heroes_list.enums.HeroesListSeparatorType
+import com.bankhapoalimheroes.utils.application.App
 import com.bankhapoalimheroes.utils.constants.DefaultData
 import com.bankhapoalimheroes.utils.constants.NetworkConstants
+import com.bankhapoalimheroes.utils.constants.NetworkConstants.SUCCESS_RESULT_RESPONSE
 import com.haroldadmin.cnradapter.NetworkResponse
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 
-class RemoteHeroDataSource(private val heroesApi: HeroesApi) {
+class RemoteHeroDataSourceImp(private val heroesApi: HeroesApi) : RemoteHeroDataSource {
 
 
-    suspend fun getHeroesByNameWithSuggestions(name: String): NetworkResponse<*, String> {
+    override suspend fun getHeroesByNameWithSuggestions(name: String): NetworkResponse<*, String> {
         val suggestedHeroesResult = getSuggestedHeroesList(false)
         if (suggestedHeroesResult is NetworkResponse.Error) return suggestedHeroesResult
         val heroesResult = getHeroesByName(name)
         if (heroesResult is NetworkResponse.Error) return heroesResult
+        if ((heroesResult as NetworkResponse.Success).body.response != SUCCESS_RESULT_RESPONSE) {
+            return NetworkResponse.UnknownError(Throwable(App.instance.getString(R.string.remote_hero_data_source)))
+        }
         val suggestedHeroesList = (suggestedHeroesResult as NetworkResponse.Success).body as List<HeroesListModel>
         val heroesListsWithSeparationModels = createHeroListWithSeparation(suggestedHeroesList)
-        (heroesResult as NetworkResponse.Success).body.heroesList.forEach { hero ->
+        heroesResult.body.heroesList.forEach { hero ->
             val id = hero.id
             val imageUrl = hero.image.url
             val heroName = hero.name
@@ -37,7 +43,7 @@ class RemoteHeroDataSource(private val heroesApi: HeroesApi) {
      * suggested heroes list combined with the search query results. If true, this means we are only showing the
      * recommended heroes and should add separation ViewHolders.
      */
-    suspend fun getSuggestedHeroesList(addSeparation: Boolean): NetworkResponse<*, String> {
+    override suspend fun getSuggestedHeroesList(addSeparation: Boolean): NetworkResponse<*, String> {
         val suggestedHeroesList = mutableListOf<Deferred<NetworkResponse<*, String>>>()
         coroutineScope {
             DefaultData.SUGGESTED_HEROES_LIST.forEach { heroName ->
@@ -46,7 +52,8 @@ class RemoteHeroDataSource(private val heroesApi: HeroesApi) {
             }
         }
         val suggestedHeroes = mutableListOf<HeroesListModel>()
-        suggestedHeroesList.awaitAll().forEach { networkResponse ->
+        val awaitAll = suggestedHeroesList.awaitAll()
+        awaitAll.forEach { networkResponse ->
             if (networkResponse is NetworkResponse.Error) return networkResponse
             val element = (networkResponse as NetworkResponse.Success).body as List<HeroesListModel>
             /*Response could be more then 1 hero when fetching data but we assume that
@@ -72,8 +79,11 @@ class RemoteHeroDataSource(private val heroesApi: HeroesApi) {
     private suspend fun getHeroesListContainingName(name: String): NetworkResponse<*, String> {
         val heroesResult = getHeroesByName(name)
         if (heroesResult is NetworkResponse.Error) return heroesResult
+        if ((heroesResult as NetworkResponse.Success).body.response != SUCCESS_RESULT_RESPONSE) {
+            return NetworkResponse.UnknownError(Throwable(App.instance.getString(R.string.remote_hero_data_source)))
+        }
         val heroesListsModels = mutableListOf<HeroesListModel>()
-        (heroesResult as NetworkResponse.Success).body.heroesList.forEach { hero ->
+        heroesResult.body.heroesList.forEach { hero ->
             val id = hero.id
             val imageUrl = hero.image.url
             val heroName = hero.name

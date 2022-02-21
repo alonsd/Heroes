@@ -10,6 +10,7 @@ import com.bankhapoalimheroes.utils.constants.CacheConstants.ONE_DAY_MILLIS
 import com.bankhapoalimheroes.utils.extensions.imagesCacheTime
 import com.bankhapoalimheroes.utils.extensions.sharedPreferences
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.signature.ObjectKey
 import org.koin.core.component.KoinApiExtension
 import org.koin.core.component.KoinComponent

@@ -1,4 +1,4 @@
-package com.bankhapoalimheroes.data.source.remote.source
+package com.bankhapoalimheroes.data.source.remote.source.hero_details
 
 import com.bankhapoalimheroes.data.source.remote.api.HeroesDetailsApi
 import com.bankhapoalimheroes.model.network_models.HeroesListResponseModel
@@ -10,7 +10,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
 
-class RemoteHeroDetailsDataSource(private val heroesDetailsApi: HeroesDetailsApi) {
+class RemoteHeroDetailsDataSourceImp(private val heroesDetailsApi: HeroesDetailsApi) {
+
 
     suspend fun getHeroDetails(heroId: String): NetworkResponse<*, String> {
         val heroAppearance = heroesDetailsApi.getHeroAppearance(NetworkConstants.TOKEN, heroId)
