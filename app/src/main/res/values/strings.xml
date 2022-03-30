@@ -1,7 +1,7 @@
 <resources>
 
     <!--    App Name-->
-    <string name="app_name">BankHapoalimHeroes</string>
+    <string name="app_name">Heroes</string>
 
     <!--    ViewHolder Heroes Separator-->
     <string name="viewholder_heroes_separator_suggestions">Suggestions - </string>

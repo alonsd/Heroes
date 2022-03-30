@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.bankhapoalimheroes.ui.application_flow.dashboard.fragment.DashboardFragment"
+        android:name="com.heroes.ui.application_flow.dashboard.fragment.DashboardFragment"
         android:label="fragment_main"
         tools:layout="@layout/fragment_dashboard">
         <action
@@ -20,11 +20,11 @@
     </fragment>
     <fragment
         android:id="@+id/heroesDetailsFragment"
-        android:name="com.bankhapoalimheroes.ui.application_flow.hero_details.fragment.HeroesDetailsFragment"
+        android:name="com.heroes.ui.application_flow.hero_details.fragment.HeroesDetailsFragment"
         android:label="HeroesDetailsFragment"
         tools:layout="@layout/fragment_hero_details" >
         <argument
             android:name="heroModel"
-            app:argType="com.bankhapoalimheroes.model.ui_models.heroes_list.HeroesListModel" />
+            app:argType="com.heroes.model.ui_models.heroes_list.HeroesListModel" />
     </fragment>
 </navigation>

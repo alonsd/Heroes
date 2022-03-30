@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.bankhapoalimheroes">
+    package="com.heroes">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name="com.bankhapoalimheroes.utils.application.App"
+        android:name="com.heroes.utils.application.App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -13,7 +13,7 @@
         android:supportsRtl="false"
         android:theme="@style/Theme.BasicApplication">
         <activity
-            android:name="com.bankhapoalimheroes.ui.activity.ApplicationActivity"
+            android:name="com.heroes.ui.activity.ApplicationActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
