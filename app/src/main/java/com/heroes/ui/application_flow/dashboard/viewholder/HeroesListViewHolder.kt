@@ -26,10 +26,6 @@ class HeroesListViewHolder(
     fun bind(model: HeroesListModel) {
 
         binding.heroesListHeroName.text = model.name
-
-        /*We update the last image cache time if 1 day has passed, using it as
-        a signature data that changes after 1 day causing as to re-fetch the image and for the
-        old image to be invalidated by Glides default behavior.*/
         heroesListItemViewModel.updateLastImagesCacheTime()
         Glide.with(binding.root.context).load(model.image)
             .signature(ObjectKey(App.instance.sharedPreferences.imagesCacheTime))
