@@ -1,33 +1,37 @@
 package com.heroes.ui.application_flow.dashboard.viewholder
 
-import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.compose.ui.platform.ComposeView
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.heroes.databinding.ViewholderHeroesListBinding
-import com.heroes.databinding.ViewholderHeroesSeparatorBinding
 import com.heroes.model.ui_models.heroes_list.BaseHeroListModel
 import com.heroes.model.ui_models.heroes_list.HeroListSeparatorModel
 import com.heroes.model.ui_models.heroes_list.HeroesListModel
 import com.heroes.model.ui_models.heroes_list.enums.HeroesListViewHolderType
 import com.heroes.utils.adapter.DefaultAdapterDiffUtilCallback
 
-class HeroesListAdapter(private val onClick: (heroModel: HeroesListModel) -> Unit) : androidx.recyclerview.widget.ListAdapter<BaseHeroListModel,
-        RecyclerView.ViewHolder>(DefaultAdapterDiffUtilCallback<BaseHeroListModel>()) {
+class HeroesListAdapter(
+    private val onClick: (heroModel: HeroesListModel) -> Unit
+) : ListAdapter<BaseHeroListModel, RecyclerView.ViewHolder>(
+    DefaultAdapterDiffUtilCallback<BaseHeroListModel>()
+) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         if (viewType == HeroesListViewHolderType.HERO.value) {
-            val binding = ViewholderHeroesListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-            return HeroesListViewHolder(binding, onClick)
+            return HeroesListViewHolderCompose(ComposeView(parent.context), onClick)
         }
-        val binding = ViewholderHeroesSeparatorBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return HeroesListSeparatorViewHolder(binding)
+        return HeroesListSeparatorViewHolder(ComposeView(parent.context))
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (holder is HeroesListViewHolder) {
-            return holder.bind(getItem(position) as HeroesListModel)
+        when (holder) {
+            is HeroesListSeparatorViewHolder -> {
+                holder.bind(getItem(position) as HeroListSeparatorModel)
+            }
+            is HeroesListViewHolderCompose -> {
+                holder.bind(getItem(position) as HeroesListModel)
+            }
         }
-        return (holder as HeroesListSeparatorViewHolder).bind(getItem(position) as HeroListSeparatorModel)
     }
 
     override fun getItemViewType(position: Int): Int {
