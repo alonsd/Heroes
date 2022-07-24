@@ -1,4 +1,4 @@
-package com.heroes.data.viewmodel
+package com.heroes.ui.application_flow.dashboard.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.heroes.data.repository.HeroesRepository
 import com.heroes.model.ui_models.heroes_list.HeroesListModel
 import com.haroldadmin.cnradapter.NetworkResponse
+import com.heroes.model.ui_models.heroes_list.BaseHeroListModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -18,7 +19,7 @@ class HeroesViewModel(private val heroesRepository: HeroesRepository) : ViewMode
     fun getHeroesByName(name : String) = viewModelScope.launch(Dispatchers.IO) {
         when (val response = heroesRepository.getHeroesByNameWithSuggestions(name)) {
             is NetworkResponse.Success -> {
-                mutableDataFlow.emit(HeroesViewModelActions.HandleHeroesList(response.body as List<HeroesListModel>))
+                mutableDataFlow.emit(HeroesViewModelActions.ShowHeroesList(response.body as List<HeroesListModel>))
             }
 
             is NetworkResponse.Error -> {
@@ -33,7 +34,7 @@ class HeroesViewModel(private val heroesRepository: HeroesRepository) : ViewMode
     fun getSuggestedHeroesList() = viewModelScope.launch(Dispatchers.IO) {
         when (val response = heroesRepository.getSuggestedHeroesList(true)) {
             is NetworkResponse.Success -> {
-                mutableDataFlow.emit(HeroesViewModelActions.HandleHeroesList(response.body as List<HeroesListModel>))
+                mutableDataFlow.emit(HeroesViewModelActions.ShowHeroesList(response.body as List<HeroesListModel>))
             }
 
             is NetworkResponse.Error -> {
@@ -46,7 +47,7 @@ class HeroesViewModel(private val heroesRepository: HeroesRepository) : ViewMode
     }
 
     sealed class HeroesViewModelActions {
-        data class HandleHeroesList(val modelsListResponse: List<HeroesListModel>) : HeroesViewModelActions()
+        data class ShowHeroesList(val modelsListResponse: List<BaseHeroListModel>) : HeroesViewModelActions()
         data class ShowGeneralError(val errorMessage: String) : HeroesViewModelActions()
         object GetSuggestedList : HeroesViewModelActions()
     }

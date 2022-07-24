@@ -8,31 +8,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.recyclerview.widget.RecyclerView
 import coil.compose.rememberAsyncImagePainter
 import com.heroes.model.ui_models.heroes_list.HeroesListModel
-
-class HeroesListViewHolderCompose(
-    private val composeView: ComposeView,
-    private val onClick: (heroModel: HeroesListModel) -> Unit
-) : RecyclerView.ViewHolder(composeView) {
-
-    init {
-        composeView.setViewCompositionStrategy(
-            ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
-        )
-    }
-
-    fun bind(model: HeroesListModel) {
-        composeView.setContent {
-            HeroesListItem(model, onClick)
-        }
-    }
-}
 
 @Composable
 fun HeroesListItem(model: HeroesListModel, onClick: (heroModel: HeroesListModel) -> Unit) {
@@ -59,3 +38,5 @@ fun HeroesListItem(model: HeroesListModel, onClick: (heroModel: HeroesListModel)
         )
     }
 }
+
+

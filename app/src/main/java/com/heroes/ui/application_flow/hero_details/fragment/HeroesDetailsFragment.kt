@@ -9,7 +9,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import com.heroes.R
-import com.heroes.data.viewmodel.HeroesDetailsViewModel
+import com.heroes.ui.application_flow.hero_details.viewmodel.HeroesDetailsViewModel
 import com.heroes.databinding.FragmentHeroDetailsBinding
 import com.heroes.model.ui_models.hero_details.HeroDetailsModel
 import com.heroes.ui.application_flow.hero_details.viewholder.HeroDetailsAdapter
@@ -31,7 +31,7 @@ class HeroesDetailsFragment : Fragment() {
     private var adapter = HeroDetailsAdapter()
 
     //Class Variables - Strings
-    private var heroPlaceOfBirth : String = ""
+    private var heroPlaceOfBirth: String = ""
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentHeroDetailsBinding.inflate(inflater, container, false)
@@ -61,13 +61,15 @@ class HeroesDetailsFragment : Fragment() {
     }
 
     private fun handleAdditionalHeroDetails(heroDetailsModel: HeroDetailsModel) {
-        heroPlaceOfBirth = if (heroDetailsModel.placeOfBirth.length < 2){
+        heroPlaceOfBirth = if (heroDetailsModel.placeOfBirth.length < 2) {
             getString(R.string.heroes_details_fragment_not_available)
         } else {
             heroDetailsModel.placeOfBirth
         }
-        binding.heroesListHeroPlaceOfBirthTextView.text = getString(R.string.hero_details_fragment_place_of_birth,
-            heroDetailsModel.placeOfBirth)
+        binding.heroesListHeroPlaceOfBirthTextView.text = getString(
+            R.string.hero_details_fragment_place_of_birth,
+            heroDetailsModel.placeOfBirth
+        )
         binding.heroDetailsRecyclerView.setAdapter(requireContext(), adapter, true)
         adapter.submitList(heroDetailsModel.heroDetailsCardModels.toList())
     }
@@ -84,10 +86,12 @@ class HeroesDetailsFragment : Fragment() {
     }
 
     private fun shareHeroDetails() {
-        val heroDetailsForSharing = getString(R.string.hero_details_fragment_hero_details_for_sharing,
-        navArgs.heroModel.name,
-        heroPlaceOfBirth,
-        navArgs.heroModel.image)
+        val heroDetailsForSharing = getString(
+            R.string.hero_details_fragment_hero_details_for_sharing,
+            navArgs.heroModel.name,
+            heroPlaceOfBirth,
+            navArgs.heroModel.image
+        )
         val sendIntent = Intent().apply {
             action = Intent.ACTION_SEND
             putExtra(Intent.EXTRA_TEXT, heroDetailsForSharing)

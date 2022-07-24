@@ -1,4 +1,4 @@
-package com.heroes.data.viewmodel
+package com.heroes.ui.application_flow.hero_details.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
