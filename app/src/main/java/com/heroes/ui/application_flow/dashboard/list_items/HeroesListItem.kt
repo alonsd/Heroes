@@ -1,4 +1,4 @@
-package com.heroes.ui.application_flow.dashboard.viewholder
+package com.heroes.ui.application_flow.dashboard.list_items
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable

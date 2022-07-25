@@ -28,18 +28,8 @@
         app:layout_constraintTop_toTopOf="@+id/heroes_search_view"
         tools:visibility="visible" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/heroesRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/heroes_search_view"
-        tools:itemCount="8"
-        tools:listitem="@layout/viewholder_heroes_list" />
-
     <androidx.compose.ui.platform.ComposeView
-        android:id="@+id/heroesRecyclerView2"
+        android:id="@+id/heroesList"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
