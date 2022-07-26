@@ -44,8 +44,20 @@
         app:layout_constraintTop_toBottomOf="@+id/heroes_list_hero_name_text_view"
         tools:text="Place of Birth: lorem ipsum" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/hero_details_recycler_view"
+<!--    <androidx.recyclerview.widget.RecyclerView-->
+<!--        android:id="@+id/hero_details_recycler_view"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="horizontal"-->
+<!--        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/heroes_list_hero_place_of_birth_text_view"-->
+<!--        tools:listitem="@layout/viewholder_hero_card" />-->
+
+    <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/hero_details_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"

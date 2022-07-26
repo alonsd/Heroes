@@ -24,6 +24,9 @@ class HeroesViewModel(private val heroesRepository: HeroesRepository) : ViewMode
     private val externalUiEvent = MutableSharedFlow<UiEvent>()
     private val uiEvent = externalUiEvent.asSharedFlow()
 
+    private val internalProgressBarVisible = MutableStateFlow(false)
+    val progressbarVisible = internalProgressBarVisible.asStateFlow()
+
     init {
         observeUiEvents()
         getSuggestedHeroesList()
@@ -35,7 +38,7 @@ class HeroesViewModel(private val heroesRepository: HeroesRepository) : ViewMode
                 is UiEvent.ListItemClicked -> {
                     navigateToHeroDetails(event.heroModel)
                 }
-                is UiEvent.SearchTextChanged -> {
+                is UiEvent.SearchQueryChanged -> {
                     getHeroesByName(event.searchText)
                 }
             }
@@ -46,30 +49,30 @@ class HeroesViewModel(private val heroesRepository: HeroesRepository) : ViewMode
         submitAction(UiAction.NavigateToHeroesDetails(heroModel))
 
     private fun getHeroesByName(name: String) = viewModelScope.launch(Dispatchers.IO) {
+        internalProgressBarVisible.value = true
         when (val response = heroesRepository.getHeroesByNameWithSuggestions(name)) {
             is NetworkResponse.Success -> {
-                internalUiState.emit(UiState.Data(response.body as List<HeroesListModel>))
+                submitState(UiState.Data(response.body as List<HeroesListModel>))
             }
 
             is NetworkResponse.Error -> {
-                response.error.message?.let { message ->
-                    internalUiState.emit(UiState.Error(message))
-                }
+                val message = response.error.message ?: return@launch
+                submitState(UiState.Error(message))
             }
             else -> {}
         }
     }
 
     private fun getSuggestedHeroesList() = viewModelScope.launch(Dispatchers.IO) {
+        internalProgressBarVisible.value = true
         when (val response = heroesRepository.getSuggestedHeroesList(true)) {
             is NetworkResponse.Success -> {
                 submitState(UiState.Data(response.body as List<HeroesListModel>))
             }
 
             is NetworkResponse.Error -> {
-                response.error.message?.let { message ->
-                    submitState(UiState.Error(message))
-                }
+                val message = response.error.message ?: return@launch
+                submitState(UiState.Error(message))
             }
             else -> {}
         }
@@ -81,6 +84,7 @@ class HeroesViewModel(private val heroesRepository: HeroesRepository) : ViewMode
 
     private fun submitState(uiState: UiState) = viewModelScope.launch {
         internalUiState.emit(uiState)
+        internalProgressBarVisible.value = false
     }
 
     fun submitEvent(uiEvent: UiEvent) = viewModelScope.launch {
@@ -88,7 +92,7 @@ class HeroesViewModel(private val heroesRepository: HeroesRepository) : ViewMode
     }
 
     sealed class UiEvent {
-        data class SearchTextChanged(val searchText: String) : UiEvent()
+        data class SearchQueryChanged(val searchText: String) : UiEvent()
         data class ListItemClicked(val heroModel: HeroesListModel) : UiEvent()
     }
 

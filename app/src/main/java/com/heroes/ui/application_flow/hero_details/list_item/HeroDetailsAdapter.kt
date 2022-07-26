@@ -1,4 +1,4 @@
-package com.heroes.ui.application_flow.hero_details.viewholder
+package com.heroes.ui.application_flow.hero_details.list_item
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

@@ -28,7 +28,7 @@ android {
 
 
     defaultConfig {
-        applicationId "com.basicapplication"
+        applicationId "com.heroes"
         minSdkVersion 24
         targetSdkVersion 32
         versionCode 1

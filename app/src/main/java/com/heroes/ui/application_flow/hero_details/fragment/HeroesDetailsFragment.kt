@@ -6,14 +6,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import com.heroes.R
 import com.heroes.ui.application_flow.hero_details.viewmodel.HeroesDetailsViewModel
 import com.heroes.databinding.FragmentHeroDetailsBinding
 import com.heroes.model.ui_models.hero_details.HeroDetailsModel
-import com.heroes.ui.application_flow.hero_details.viewholder.HeroDetailsAdapter
+import com.heroes.ui.application_flow.hero_details.list_item.HeroDetailsAdapter
 import com.bumptech.glide.Glide
+import com.heroes.ui.application_flow.hero_details.list_item.HeroDetailsCardItem
 import com.heroes.utils.extensions.setAdapter
 import com.heroes.utils.extensions.setVisiblyAsVisible
 import org.koin.android.ext.android.inject
@@ -26,9 +29,6 @@ class HeroesDetailsFragment : Fragment() {
 
     //Class Variables - Dependency Injection
     private val heroesDetailsViewModel: HeroesDetailsViewModel by inject()
-
-    //Class Variables - Adapter
-    private var adapter = HeroDetailsAdapter()
 
     //Class Variables - Strings
     private var heroPlaceOfBirth: String = ""
@@ -70,8 +70,13 @@ class HeroesDetailsFragment : Fragment() {
             R.string.hero_details_fragment_place_of_birth,
             heroDetailsModel.placeOfBirth
         )
-        binding.heroDetailsRecyclerView.setAdapter(requireContext(), adapter, true)
-        adapter.submitList(heroDetailsModel.heroDetailsCardModels.toList())
+        binding.heroDetailsList.setContent {
+            LazyRow {
+                items(heroDetailsModel.heroDetailsCardModels) { heroModel ->
+                    HeroDetailsCardItem(model = heroModel)
+                }
+            }
+        }
     }
 
     private fun init() {

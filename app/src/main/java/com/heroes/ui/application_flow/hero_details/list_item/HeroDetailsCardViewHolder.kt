@@ -1,4 +1,4 @@
-package com.heroes.ui.application_flow.hero_details.viewholder
+package com.heroes.ui.application_flow.hero_details.list_item
 
 import androidx.recyclerview.widget.RecyclerView
 import com.heroes.R

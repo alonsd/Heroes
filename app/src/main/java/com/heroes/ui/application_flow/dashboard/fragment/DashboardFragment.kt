@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.heroes.databinding.FragmentDashboardBinding
@@ -17,8 +18,6 @@ import com.heroes.ui.application_flow.dashboard.list_items.HeroesListSeparatorIt
 import com.heroes.ui.application_flow.dashboard.viewmodel.HeroesViewModel
 import com.heroes.utils.custom_implementations.OnSearchViewOnlyTextChangedListener
 import com.heroes.utils.extensions.launchAndRepeatWithViewLifecycle
-import com.heroes.utils.extensions.setVisiblyAsGone
-import com.heroes.utils.extensions.setVisiblyAsVisible
 import org.koin.android.ext.android.get
 
 class DashboardFragment : Fragment() {
@@ -40,6 +39,23 @@ class DashboardFragment : Fragment() {
         init()
         observeUiState()
         observeUiAction()
+        observerProgressBarVisible()
+    }
+
+    private fun init() {
+        binding.heroesSearchView.setOnQueryTextListener(object : OnSearchViewOnlyTextChangedListener() {
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if (newText.isNullOrEmpty()) return false
+                heroesViewModel.submitEvent(HeroesViewModel.UiEvent.SearchQueryChanged(newText))
+                return false
+            }
+        })
+    }
+
+    private fun observerProgressBarVisible() = launchAndRepeatWithViewLifecycle {
+        heroesViewModel.progressbarVisible.collect { isVisible ->
+            binding.progressBar.isVisible = isVisible
+        }
     }
 
     private fun observeUiAction() = launchAndRepeatWithViewLifecycle {
@@ -50,18 +66,6 @@ class DashboardFragment : Fragment() {
                 }
             }
         }
-    }
-
-    private fun init() {
-        binding.heroesSearchView.setOnQueryTextListener(object : OnSearchViewOnlyTextChangedListener() {
-            override fun onQueryTextChange(newText: String?): Boolean {
-                if (newText.isNullOrEmpty()) return false
-                heroesViewModel.submitEvent(HeroesViewModel.UiEvent.SearchTextChanged(newText))
-                binding.progressBar.setVisiblyAsVisible()
-                return false
-            }
-
-        })
     }
 
     private fun observeUiState() = launchAndRepeatWithViewLifecycle {
@@ -95,12 +99,10 @@ class DashboardFragment : Fragment() {
                 }
             }
         }
-        binding.progressBar.setVisiblyAsGone()
     }
 
     private fun showGeneralError(result: HeroesViewModel.UiState.Error) {
         Toast.makeText(requireContext(), result.errorMessage, Toast.LENGTH_LONG).show()
-        binding.progressBar.setVisiblyAsGone()
     }
 
 }
