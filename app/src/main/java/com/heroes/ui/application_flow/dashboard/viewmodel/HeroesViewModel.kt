@@ -21,8 +21,8 @@ class HeroesViewModel(private val heroesRepository: HeroesRepository) : ViewMode
     private val internalUiAction = MutableSharedFlow<UiAction>()
     val uiAction = internalUiAction.asSharedFlow()
 
-    private val externalUiEvent = MutableSharedFlow<UiEvent>()
-    private val uiEvent = externalUiEvent.asSharedFlow()
+    private val mutableUiEvent = MutableSharedFlow<UiEvent>()
+    private val uiEvent = mutableUiEvent.asSharedFlow()
 
     private val internalProgressBarVisible = MutableStateFlow(false)
     val progressbarVisible = internalProgressBarVisible.asStateFlow()
@@ -88,7 +88,7 @@ class HeroesViewModel(private val heroesRepository: HeroesRepository) : ViewMode
     }
 
     fun submitEvent(uiEvent: UiEvent) = viewModelScope.launch {
-        externalUiEvent.emit(uiEvent)
+        mutableUiEvent.emit(uiEvent)
     }
 
     sealed class UiEvent {

@@ -18,7 +18,7 @@ import com.heroes.ui.application_flow.dashboard.list_items.HeroesListSeparatorIt
 import com.heroes.ui.application_flow.dashboard.viewmodel.HeroesViewModel
 import com.heroes.utils.custom_implementations.OnSearchViewOnlyTextChangedListener
 import com.heroes.utils.extensions.launchAndRepeatWithViewLifecycle
-import org.koin.android.ext.android.get
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class DashboardFragment : Fragment() {
 
@@ -26,7 +26,7 @@ class DashboardFragment : Fragment() {
     private lateinit var binding: FragmentDashboardBinding
 
     //Class Variables - Dependency Injection
-    private val heroesViewModel = get<HeroesViewModel>()
+    private val heroesViewModel: HeroesViewModel by viewModel()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentDashboardBinding.inflate(inflater, container, false)

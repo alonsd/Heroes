@@ -9,17 +9,22 @@ import android.widget.Toast
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.fragment.navArgs
 import com.heroes.R
 import com.heroes.ui.application_flow.hero_details.viewmodel.HeroesDetailsViewModel
 import com.heroes.databinding.FragmentHeroDetailsBinding
 import com.heroes.model.ui_models.hero_details.HeroDetailsModel
-import com.heroes.ui.application_flow.hero_details.list_item.HeroDetailsAdapter
 import com.bumptech.glide.Glide
 import com.heroes.ui.application_flow.hero_details.list_item.HeroDetailsCardItem
-import com.heroes.utils.extensions.setAdapter
+import com.heroes.utils.extensions.launchAndRepeatWithViewLifecycle
 import com.heroes.utils.extensions.setVisiblyAsVisible
 import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.stateViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.context.GlobalContext.get
+import org.koin.core.parameter.parametersOf
+import org.koin.java.KoinJavaComponent.inject
 
 class HeroesDetailsFragment : Fragment() {
 
@@ -28,7 +33,7 @@ class HeroesDetailsFragment : Fragment() {
     private val navArgs: HeroesDetailsFragmentArgs by navArgs()
 
     //Class Variables - Dependency Injection
-    private val heroesDetailsViewModel: HeroesDetailsViewModel by inject()
+    private val heroesDetailsViewModel: HeroesDetailsViewModel by stateViewModel( state = { navArgs.toBundle() })
 
     //Class Variables - Strings
     private var heroPlaceOfBirth: String = ""
@@ -42,18 +47,19 @@ class HeroesDetailsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         init()
-        handleData()
+        initListeners()
+        observeUiState()
     }
 
-    private fun handleData() {
-        heroesDetailsViewModel.actions.observe(viewLifecycleOwner) { action ->
-            when (action) {
-                is HeroesDetailsViewModel.HeroDetailsViewModelActions.ShowAdditionalHeroDetails -> {
+    private fun observeUiState() = launchAndRepeatWithViewLifecycle {
+        heroesDetailsViewModel.uiState.collect { state ->
+            when (state) {
+                is HeroesDetailsViewModel.UiState.Data -> {
                     binding.heroDetailsFloatingActionButton.setVisiblyAsVisible()
-                    handleAdditionalHeroDetails(action.heroDetailsModel)
+                    handleAdditionalHeroDetails(state.heroDetailsModel)
                 }
-                is HeroesDetailsViewModel.HeroDetailsViewModelActions.ShowGeneralError -> {
-                    Toast.makeText(requireContext(), action.errorMessage, Toast.LENGTH_SHORT).show()
+                is HeroesDetailsViewModel.UiState.Error -> {
+                    Toast.makeText(requireContext(), state.errorMessage, Toast.LENGTH_SHORT).show()
                 }
                 else -> {}
             }
@@ -80,11 +86,13 @@ class HeroesDetailsFragment : Fragment() {
     }
 
     private fun init() {
-        heroesDetailsViewModel.getAdditionalHeroDetails(navArgs.heroModel.id)
         Glide.with(requireContext()).load(navArgs.heroModel.image)
             .placeholder(R.mipmap.ic_launcher)
             .into(binding.heroDetailsHeroImageView)
         binding.heroesListHeroNameTextView.text = navArgs.heroModel.name
+    }
+
+    private fun initListeners() {
         binding.heroDetailsFloatingActionButton.setOnClickListener {
             shareHeroDetails()
         }
