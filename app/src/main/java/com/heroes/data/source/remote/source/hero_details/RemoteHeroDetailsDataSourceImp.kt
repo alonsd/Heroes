@@ -1,10 +1,10 @@
 package com.heroes.data.source.remote.source.hero_details
 
+import com.haroldadmin.cnradapter.NetworkResponse
 import com.heroes.data.source.remote.api.HeroesDetailsApi
 import com.heroes.model.ui_models.hero_details.HeroDetailsCardModel
 import com.heroes.model.ui_models.hero_details.HeroDetailsModel
 import com.heroes.utils.constants.NetworkConstants
-import com.haroldadmin.cnradapter.NetworkResponse
 
 class RemoteHeroDetailsDataSourceImp(private val heroesDetailsApi: HeroesDetailsApi) {
 
