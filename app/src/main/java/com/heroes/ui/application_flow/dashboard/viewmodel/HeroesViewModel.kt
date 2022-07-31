@@ -3,7 +3,7 @@ package com.heroes.ui.application_flow.dashboard.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.haroldadmin.cnradapter.NetworkResponse
-import com.heroes.data.repository.HeroesRepository
+import com.heroes.data.repository.HeroesRepositoryImpl
 import com.heroes.model.ui_models.heroes_list.BaseHeroListModel
 import com.heroes.model.ui_models.heroes_list.HeroesListModel
 import kotlinx.coroutines.Dispatchers
@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class HeroesViewModel(private val heroesRepository: HeroesRepository) : ViewModel() {
+class HeroesViewModel(private val heroesRepositoryImpl: HeroesRepositoryImpl) : ViewModel() {
 
     private val internalUiState = MutableStateFlow<UiState>(UiState.Initial)
     val uiState = internalUiState.asStateFlow()
@@ -50,7 +50,7 @@ class HeroesViewModel(private val heroesRepository: HeroesRepository) : ViewMode
 
     private fun getHeroesByName(name: String) = viewModelScope.launch(Dispatchers.IO) {
         internalProgressBarVisible.value = true
-        when (val response = heroesRepository.getHeroesByNameWithSuggestions(name)) {
+        when (val response = heroesRepositoryImpl.getHeroesByNameWithSuggestions(name)) {
             is NetworkResponse.Success -> {
                 submitState(UiState.Data(response.body as List<HeroesListModel>))
             }
@@ -65,7 +65,7 @@ class HeroesViewModel(private val heroesRepository: HeroesRepository) : ViewMode
 
     private fun getSuggestedHeroesList() = viewModelScope.launch(Dispatchers.IO) {
         internalProgressBarVisible.value = true
-        when (val response = heroesRepository.getSuggestedHeroesList(true)) {
+        when (val response = heroesRepositoryImpl.getSuggestedHeroesList(true)) {
             is NetworkResponse.Success -> {
                 submitState(UiState.Data(response.body as List<HeroesListModel>))
             }

@@ -1,14 +1,8 @@
 package com.heroes.data.repository
 
-import com.heroes.data.source.remote.source.hero.RemoteHeroDataSourceImp
+interface HeroesRepository {
 
-class HeroesRepository(private val remoteHeroDataSource: RemoteHeroDataSourceImp) {
-    
-    suspend fun getHeroesByNameWithSuggestions(name: String) =
-        remoteHeroDataSource.getHeroesByNameWithSuggestions(name)
+    suspend fun getHeroesByNameWithSuggestions(name: String)
 
-    suspend fun getSuggestedHeroesList(addSeparation: Boolean) =
-        remoteHeroDataSource.getSuggestedHeroesList(addSeparation)
-
+    suspend fun getSuggestedHeroesList(addSeparation: Boolean)
 }
-
