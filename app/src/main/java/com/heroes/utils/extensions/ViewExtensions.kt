@@ -28,3 +28,29 @@ fun View.setVisiblyAsVisible(){
 fun View.setVisiblyAsInvisible(){
     visibility = View.INVISIBLE
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
