@@ -7,9 +7,12 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.heroes.core.SearchBar
 import com.heroes.databinding.FragmentDashboardBinding
 import com.heroes.model.ui_models.heroes_list.HeroListSeparatorModel
 import com.heroes.model.ui_models.heroes_list.HeroesListModel
@@ -20,6 +23,7 @@ import com.heroes.utils.custom_implementations.OnSearchViewOnlyTextChangedListen
 import com.heroes.utils.extensions.launchAndRepeatWithViewLifecycle
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
+@ExperimentalComposeUiApi
 class DashboardFragment : Fragment() {
 
     //Class Variables - UI
@@ -43,13 +47,25 @@ class DashboardFragment : Fragment() {
     }
 
     private fun init() {
-        binding.heroesSearchView.setOnQueryTextListener(object : OnSearchViewOnlyTextChangedListener() {
-            override fun onQueryTextChange(newText: String?): Boolean {
-                if (newText.isNullOrEmpty()) return false
-                heroesViewModel.submitEvent(HeroesViewModel.UiEvent.SearchQueryChanged(newText))
-                return false
-            }
-        })
+//        binding.heroesSearchView.setOnQueryTextListener(object : OnSearchViewOnlyTextChangedListener() {
+//            override fun onQueryTextChange(newText: String?): Boolean {
+//                if (newText.isNullOrEmpty()) return false
+//                heroesViewModel.submitEvent(HeroesViewModel.UiEvent.SearchQueryChanged(newText))
+//                return false
+//            }
+//        })
+        binding.heroesSearchView.setContent {
+            SearchBar(query = TextFieldValue("Search for a hero"),
+                onQueryChanged = { textFieldValue ->
+                    val text = textFieldValue.text
+                    if (text.isEmpty()) return@SearchBar
+                    heroesViewModel.submitEvent(HeroesViewModel.UiEvent.SearchQueryChanged(text))
+                },
+                onSearchFocusChange = { },
+                onClearQuery = { },
+                onBack = { }, searching = false, focused = false
+            )
+        }
     }
 
     private fun observerProgressBarVisible() = launchAndRepeatWithViewLifecycle {

@@ -7,7 +7,17 @@
     android:layout_height="match_parent"
     tools:context=".ui.application_flow.dashboard.fragment.DashboardFragment">
 
-    <androidx.appcompat.widget.SearchView
+<!--    <androidx.appcompat.widget.SearchView-->
+<!--        android:id="@+id/heroes_search_view"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginEnd="16dp"-->
+<!--        app:layout_constraintEnd_toStartOf="@+id/progress_bar"-->
+<!--        android:layout_marginStart="16dp"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent" /> -->
+
+    <androidx.compose.ui.platform.ComposeView
         android:id="@+id/heroes_search_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

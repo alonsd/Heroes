@@ -116,6 +116,7 @@ fun SearchHint(
         modifier = Modifier
             .fillMaxSize()
             .then(modifier)
+
     ) {
         Text(
             text = hint,
