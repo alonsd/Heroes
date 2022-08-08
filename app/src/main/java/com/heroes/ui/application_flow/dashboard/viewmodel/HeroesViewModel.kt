@@ -1,16 +1,15 @@
 package com.heroes.ui.application_flow.dashboard.viewmodel
 
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.haroldadmin.cnradapter.NetworkResponse
+import com.heroes.core.SearchState
 import com.heroes.data.repository.HeroesRepositoryImpl
 import com.heroes.model.ui_models.heroes_list.BaseHeroListModel
 import com.heroes.model.ui_models.heroes_list.HeroesListModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class HeroesViewModel(private val heroesRepositoryImpl: HeroesRepositoryImpl) : ViewModel() {
@@ -27,6 +26,7 @@ class HeroesViewModel(private val heroesRepositoryImpl: HeroesRepositoryImpl) : 
     private val internalProgressBarVisible = MutableStateFlow(false)
     val progressbarVisible = internalProgressBarVisible.asStateFlow()
 
+
     init {
         observeUiEvents()
         getSuggestedHeroesList()
@@ -39,7 +39,8 @@ class HeroesViewModel(private val heroesRepositoryImpl: HeroesRepositoryImpl) : 
                     navigateToHeroDetails(event.heroModel)
                 }
                 is UiEvent.SearchQueryChanged -> {
-                    getHeroesByName(event.searchText)
+                    val searchText = event.searchText
+                    getHeroesByName(searchText)
                 }
             }
         }

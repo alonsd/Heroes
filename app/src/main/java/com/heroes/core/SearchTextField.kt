@@ -22,26 +22,29 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun SearchTextFieldPreview() {
     SearchTextField(
-        query = TextFieldValue("Alon"),
+        searchState = SearchState(
+            TextFieldValue("Alon"),
+            focused = false,
+            searching = true
+        ),
         onQueryChanged = { },
         onSearchFocusChanged = { },
         onClearQuery = { },
-        searching = true,
-        focused = false
     )
 }
 
 @Composable
 fun SearchTextField(
-    query: TextFieldValue,
-    onQueryChanged: (TextFieldValue) -> Unit,
+    searchState: SearchState,
+    onQueryChanged: (String) -> Unit,
     onSearchFocusChanged: (Boolean) -> Unit,
     onClearQuery: () -> Unit,
-    searching: Boolean,
-    focused: Boolean,
     modifier: Modifier = Modifier
 ) {
     val focusRequester = remember { FocusRequester() }
+    val focused by remember{ mutableStateOf(searchState.focused)}
+    var query by remember{ mutableStateOf(searchState.query.text)}
+    val searching = searchState.searching
 
     Surface(
         modifier = modifier
@@ -65,14 +68,17 @@ fun SearchTextField(
                 modifier = modifier
             ) {
 
-                if (query.text.isEmpty()) {
+                if (query.isEmpty()) {
                     SearchHint(modifier = modifier.padding(start = 24.dp, end = 8.dp))
                 }
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     BasicTextField(
                         value = query,
-                        onValueChange = onQueryChanged,
+                        onValueChange = {
+                            query = it
+                            onQueryChanged(it)
+                        },
                         modifier = Modifier
                             .fillMaxSize()
                             .weight(1f)
@@ -83,24 +89,26 @@ fun SearchTextField(
                             .padding(top = 9.dp, bottom = 8.dp, start = 24.dp, end = 8.dp),
                         singleLine = true
                     )
-
                     when {
                         searching -> {
                             CircularProgressIndicator(
                                 modifier = Modifier
-                                    .padding(horizontal = 6.dp)
-                                    .size(36.dp)
+                                    .padding(horizontal = 16.dp)
+                                    .width(25.dp)
+                                    .size(24.dp)
                             )
                         }
 
-                        query.text.isNotEmpty() -> {
+                        query.isNotEmpty() -> {
                             IconButton(onClick = onClearQuery) {
-                                Icon(imageVector = Icons.Filled.Close, contentDescription = null)
+                                Icon(
+                                    imageVector = Icons.Filled.Close,
+                                    contentDescription = null
+                                )
                             }
                         }
                     }
                 }
-
             }
         }
     }
@@ -127,39 +135,21 @@ fun SearchHint(
 
 @Composable
 fun rememberSearchState(
-    query: TextFieldValue = TextFieldValue(""),
-    focused: Boolean = false,
-    searching: Boolean = false,
-    searchResults: List<String> = emptyList()
-) = remember { SearchState(query, focused, searching, searchResults) }
+    searchState: SearchState
+) = remember { mutableStateOf(searchState) }
 
 
 class SearchState(
     query: TextFieldValue,
     focused: Boolean,
     searching: Boolean,
-    searchResults: List<String>
 ) {
 
     var query by mutableStateOf(query)
     var focused by mutableStateOf(focused)
     var searching by mutableStateOf(searching)
-    var searchResults by mutableStateOf(searchResults)
-
-    val searchDisplay: SearchDisplay
-        get() = when {
-            searchResults.isEmpty() -> SearchDisplay.NoResults
-            else -> SearchDisplay.Results
-        }
 
     override fun toString(): String {
-        return "🚀 State query: $query, focused: $focused, searching: $searching " +
-                "searchResults: ${searchResults.size}, " +
-                " searchDisplay: $searchDisplay"
+        return "State query: $query, focused: $focused, searching: $searching "
     }
-}
-
-enum class SearchDisplay {
-    Results,
-    NoResults
 }

@@ -1,5 +1,3 @@
-
-
 package com.heroes.core
 
 import androidx.compose.animation.AnimatedVisibility
@@ -11,6 +9,9 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -28,13 +29,15 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun SearchBarPreview() {
     SearchBar(
-        TextFieldValue("גגגגגגג"),
+        searchState = SearchState(
+            TextFieldValue("Alon"),
+            focused = false,
+            searching = false
+        ),
         {},
-        { },
         {},
         {},
-        searching = false,
-        focused = true,
+        {},
         modifier = Modifier
     )
 }
@@ -43,18 +46,17 @@ fun SearchBarPreview() {
 @ExperimentalComposeUiApi
 @Composable
 fun SearchBar(
-    query: TextFieldValue,
-    onQueryChanged: (TextFieldValue) -> Unit,
+    searchState: SearchState,
+    onQueryChanged: (String) -> Unit,
     onSearchFocusChange: (Boolean) -> Unit,
     onClearQuery: () -> Unit,
     onBack: () -> Unit,
-    searching: Boolean,
-    focused: Boolean,
     modifier: Modifier = Modifier
 ) {
 
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
+    val focused by remember { mutableStateOf(searchState.focused) }
 
     Row(
         modifier = modifier.fillMaxWidth(),
@@ -67,13 +69,10 @@ fun SearchBar(
     }
 
     SearchTextField(
-        query,
+        searchState,
         onQueryChanged,
         onSearchFocusChange,
         onClearQuery,
-        searching,
-        focused,
-        modifier
     )
 }
 
