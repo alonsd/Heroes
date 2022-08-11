@@ -13,7 +13,6 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
@@ -23,13 +22,13 @@ import androidx.compose.ui.unit.dp
 fun SearchTextFieldPreview() {
     SearchTextField(
         searchState = SearchState(
-            TextFieldValue("Alon"),
+            "Alon",
             focused = false,
             searching = true
         ),
         onQueryChanged = { },
         onSearchFocusChanged = { },
-        onClearQuery = { },
+        onClearQueryClicked = { },
     )
 }
 
@@ -38,12 +37,12 @@ fun SearchTextField(
     searchState: SearchState,
     onQueryChanged: (String) -> Unit,
     onSearchFocusChanged: (Boolean) -> Unit,
-    onClearQuery: () -> Unit,
+    onClearQueryClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val focusRequester = remember { FocusRequester() }
-    val focused by remember{ mutableStateOf(searchState.focused)}
-    var query by remember{ mutableStateOf(searchState.query.text)}
+    val focused = searchState.focused
+    var query = searchState.query
     val searching = searchState.searching
 
     Surface(
@@ -100,7 +99,7 @@ fun SearchTextField(
                         }
 
                         query.isNotEmpty() -> {
-                            IconButton(onClick = onClearQuery) {
+                            IconButton(onClick = onClearQueryClicked) {
                                 Icon(
                                     imageVector = Icons.Filled.Close,
                                     contentDescription = null
@@ -140,7 +139,7 @@ fun rememberSearchState(
 
 
 class SearchState(
-    query: TextFieldValue,
+    query: String,
     focused: Boolean,
     searching: Boolean,
 ) {

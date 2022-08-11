@@ -11,12 +11,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.text.input.TextFieldValue
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.heroes.core.SearchBar
-import com.heroes.core.SearchState
 import com.heroes.databinding.FragmentDashboardBinding
 import com.heroes.model.ui_models.heroes_list.HeroListSeparatorModel
 import com.heroes.model.ui_models.heroes_list.HeroesListModel
@@ -25,6 +22,7 @@ import com.heroes.ui.application_flow.dashboard.list_items.HeroesListSeparatorIt
 import com.heroes.ui.application_flow.dashboard.viewmodel.HeroesViewModel
 import com.heroes.utils.extensions.launchAndRepeatWithViewLifecycle
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import kotlin.properties.ReadWriteProperty
 
 @ExperimentalComposeUiApi
 class DashboardFragment : Fragment() {
@@ -48,19 +46,21 @@ class DashboardFragment : Fragment() {
         observeUiAction()
     }
 
-    private fun observeSearchBarState() = launchAndRepeatWithViewLifecycle  {
+    private fun observeSearchBarState() = launchAndRepeatWithViewLifecycle {
         binding.heroesSearchView.setContent {
 
-            val progressBarVisible by heroesViewModel.progressbarVisible.collectAsState()
-            Log.d("defaultAppDebuger", "progressBarVisible - $progressBarVisible")
+            val searchState by heroesViewModel.searchState.collectAsState()
+            Log.d("defaultAppDebuger", "query on observer: ${searchState.query}")
             SearchBar(
-                searchState = SearchState(TextFieldValue(""), focused = false, searching = progressBarVisible),
+                searchState = searchState,
                 onQueryChanged = { text ->
                     if (text.isEmpty()) return@SearchBar
                     heroesViewModel.submitEvent(HeroesViewModel.UiEvent.SearchQueryChanged(text))
                 },
                 onSearchFocusChange = { },
-                onClearQuery = { },
+                onClearQueryClicked = {
+                    heroesViewModel.submitEvent(HeroesViewModel.UiEvent.ClearQueryClicked)
+                },
                 onBack = { }
             )
         }

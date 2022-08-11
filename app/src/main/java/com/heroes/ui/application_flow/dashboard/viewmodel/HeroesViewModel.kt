@@ -1,6 +1,6 @@
 package com.heroes.ui.application_flow.dashboard.viewmodel
 
-import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.runtime.RecomposeScope
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.haroldadmin.cnradapter.NetworkResponse
@@ -23,14 +23,24 @@ class HeroesViewModel(private val heroesRepositoryImpl: HeroesRepositoryImpl) : 
     private val mutableUiEvent = MutableSharedFlow<UiEvent>()
     private val uiEvent = mutableUiEvent.asSharedFlow()
 
-    private val internalProgressBarVisible = MutableStateFlow(false)
-    val progressbarVisible = internalProgressBarVisible.asStateFlow()
+    private val internalSearchState = MutableStateFlow(SearchState("", focused = false, searching = false))
+    val searchState = internalSearchState.asStateFlow()
+
+//    private val mutableSearchText = MutableStateFlow("")
+//    private val searchText = mutableSearchText.asStateFlow().debounce(300)
 
 
     init {
         observeUiEvents()
+//        observeSearchText()
         getSuggestedHeroesList()
     }
+
+//    private fun observeSearchText() = viewModelScope.launch {
+//        searchText.collect { text ->
+//            getHeroesByName(text)
+//        }
+//    }
 
     private fun observeUiEvents() = viewModelScope.launch {
         uiEvent.collect { event ->
@@ -39,18 +49,28 @@ class HeroesViewModel(private val heroesRepositoryImpl: HeroesRepositoryImpl) : 
                     navigateToHeroDetails(event.heroModel)
                 }
                 is UiEvent.SearchQueryChanged -> {
-                    val searchText = event.searchText
-                    getHeroesByName(searchText)
+//                    mutableSearchText.value = event.searchText
+                    flow { emit(event.searchText) }.debounce(1000).collect { searchText ->
+                        getHeroesByName(searchText)
+                    }
+
+                }
+                UiEvent.ClearQueryClicked -> {
+                    clearSearchText()
                 }
             }
         }
+    }
+
+    private fun clearSearchText() {
+        internalSearchState.value.query = ""
     }
 
     private fun navigateToHeroDetails(heroModel: HeroesListModel) =
         submitAction(UiAction.NavigateToHeroesDetails(heroModel))
 
     private fun getHeroesByName(name: String) = viewModelScope.launch(Dispatchers.IO) {
-        internalProgressBarVisible.value = true
+        internalSearchState.value = SearchState(name, internalSearchState.value.focused, true)
         when (val response = heroesRepositoryImpl.getHeroesByNameWithSuggestions(name)) {
             is NetworkResponse.Success -> {
                 submitState(UiState.Data(response.body as List<HeroesListModel>))
@@ -65,7 +85,7 @@ class HeroesViewModel(private val heroesRepositoryImpl: HeroesRepositoryImpl) : 
     }
 
     private fun getSuggestedHeroesList() = viewModelScope.launch(Dispatchers.IO) {
-        internalProgressBarVisible.value = true
+        internalSearchState.value.searching = true
         when (val response = heroesRepositoryImpl.getSuggestedHeroesList(true)) {
             is NetworkResponse.Success -> {
                 submitState(UiState.Data(response.body as List<HeroesListModel>))
@@ -85,7 +105,7 @@ class HeroesViewModel(private val heroesRepositoryImpl: HeroesRepositoryImpl) : 
 
     private fun submitState(uiState: UiState) = viewModelScope.launch {
         internalUiState.emit(uiState)
-        internalProgressBarVisible.value = false
+        internalSearchState.value.searching = false
     }
 
     fun submitEvent(uiEvent: UiEvent) = viewModelScope.launch {
@@ -95,6 +115,7 @@ class HeroesViewModel(private val heroesRepositoryImpl: HeroesRepositoryImpl) : 
     sealed class UiEvent {
         data class SearchQueryChanged(val searchText: String) : UiEvent()
         data class ListItemClicked(val heroModel: HeroesListModel) : UiEvent()
+        object ClearQueryClicked : UiEvent()
     }
 
     sealed class UiState {

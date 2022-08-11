@@ -19,7 +19,6 @@ import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.SoftwareKeyboardController
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
@@ -30,7 +29,7 @@ import androidx.compose.ui.unit.dp
 fun SearchBarPreview() {
     SearchBar(
         searchState = SearchState(
-            TextFieldValue("Alon"),
+            "Alon",
             focused = false,
             searching = false
         ),
@@ -42,18 +41,18 @@ fun SearchBarPreview() {
     )
 }
 
-
 @ExperimentalComposeUiApi
 @Composable
 fun SearchBar(
     searchState: SearchState,
     onQueryChanged: (String) -> Unit,
     onSearchFocusChange: (Boolean) -> Unit,
-    onClearQuery: () -> Unit,
+    onClearQueryClicked: () -> Unit,
     onBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
 
+    1 to 2
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val focused by remember { mutableStateOf(searchState.focused) }
@@ -72,7 +71,7 @@ fun SearchBar(
         searchState,
         onQueryChanged,
         onSearchFocusChange,
-        onClearQuery,
+        onClearQueryClicked,
     )
 }
 
