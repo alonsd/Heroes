@@ -132,11 +132,6 @@ fun SearchHint(
     }
 }
 
-@Composable
-fun rememberSearchState(
-    searchState: SearchState
-) = remember { mutableStateOf(searchState) }
-
 
 class SearchState(
     query: String,

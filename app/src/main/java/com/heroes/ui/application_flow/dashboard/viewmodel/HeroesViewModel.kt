@@ -1,6 +1,5 @@
 package com.heroes.ui.application_flow.dashboard.viewmodel
 
-import androidx.compose.runtime.RecomposeScope
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.haroldadmin.cnradapter.NetworkResponse
@@ -14,33 +13,23 @@ import kotlinx.coroutines.launch
 
 class HeroesViewModel(private val heroesRepositoryImpl: HeroesRepositoryImpl) : ViewModel() {
 
-    private val internalUiState = MutableStateFlow<UiState>(UiState.Initial)
-    val uiState = internalUiState.asStateFlow()
+    private val _uiState = MutableStateFlow(UiState())
+    val uiState = _uiState.asStateFlow()
 
-    private val internalUiAction = MutableSharedFlow<UiAction>()
-    val uiAction = internalUiAction.asSharedFlow()
+    private val _uiAction = MutableSharedFlow<UiAction>()
+    val uiAction = _uiAction.asSharedFlow()
 
-    private val mutableUiEvent = MutableSharedFlow<UiEvent>()
-    private val uiEvent = mutableUiEvent.asSharedFlow()
+    private val _uiEvent = MutableSharedFlow<UiEvent>()
+    private val uiEvent = _uiEvent.asSharedFlow()
 
-    private val internalSearchState = MutableStateFlow(SearchState("", focused = false, searching = false))
-    val searchState = internalSearchState.asStateFlow()
-
-//    private val mutableSearchText = MutableStateFlow("")
-//    private val searchText = mutableSearchText.asStateFlow().debounce(300)
+    private val _searchState = MutableStateFlow(SearchState("", focused = false, searching = true))
+    val searchState = _searchState.asStateFlow()
 
 
     init {
         observeUiEvents()
-//        observeSearchText()
         getSuggestedHeroesList()
     }
-
-//    private fun observeSearchText() = viewModelScope.launch {
-//        searchText.collect { text ->
-//            getHeroesByName(text)
-//        }
-//    }
 
     private fun observeUiEvents() = viewModelScope.launch {
         uiEvent.collect { event ->
@@ -49,67 +38,65 @@ class HeroesViewModel(private val heroesRepositoryImpl: HeroesRepositoryImpl) : 
                     navigateToHeroDetails(event.heroModel)
                 }
                 is UiEvent.SearchQueryChanged -> {
-//                    mutableSearchText.value = event.searchText
-                    flow { emit(event.searchText) }.debounce(1000).collect { searchText ->
-                        getHeroesByName(searchText)
-                    }
-
+                    if (event.searchText.isEmpty()) { clearListToDefaultState(); return@collect }
+                    getHeroesByName(event.searchText)
                 }
                 UiEvent.ClearQueryClicked -> {
-                    clearSearchText()
+                    clearListToDefaultState()
                 }
             }
         }
     }
 
-    private fun clearSearchText() {
-        internalSearchState.value.query = ""
+    private fun clearListToDefaultState() = viewModelScope.launch {
+        _searchState.value.query = ""
+        val defaultStateList = _uiState.value.modelsListResponse?.subList(0, 5)
+        _uiState.emit(UiState(defaultStateList))
     }
 
     private fun navigateToHeroDetails(heroModel: HeroesListModel) =
         submitAction(UiAction.NavigateToHeroesDetails(heroModel))
 
     private fun getHeroesByName(name: String) = viewModelScope.launch(Dispatchers.IO) {
-        internalSearchState.value = SearchState(name, internalSearchState.value.focused, true)
+        _searchState.value = SearchState(name, _searchState.value.focused, true)
         when (val response = heroesRepositoryImpl.getHeroesByNameWithSuggestions(name)) {
             is NetworkResponse.Success -> {
-                submitState(UiState.Data(response.body as List<HeroesListModel>))
+                submitState(UiState(response.body as List<HeroesListModel>))
             }
 
             is NetworkResponse.Error -> {
                 val message = response.error.message ?: return@launch
-                submitState(UiState.Error(message))
+                submitState(UiState(errorMessage = message, state = UiState.State.Error))
             }
             else -> {}
         }
     }
 
     private fun getSuggestedHeroesList() = viewModelScope.launch(Dispatchers.IO) {
-        internalSearchState.value.searching = true
         when (val response = heroesRepositoryImpl.getSuggestedHeroesList(true)) {
             is NetworkResponse.Success -> {
-                submitState(UiState.Data(response.body as List<HeroesListModel>))
+                submitState(UiState(response.body as List<HeroesListModel>))
             }
 
             is NetworkResponse.Error -> {
                 val message = response.error.message ?: return@launch
-                submitState(UiState.Error(message))
+                submitState(UiState(errorMessage =  message, state = UiState.State.Error))
             }
             else -> {}
         }
     }
 
     private fun submitAction(uiAction: UiAction) = viewModelScope.launch {
-        internalUiAction.emit(uiAction)
+        _uiAction.emit(uiAction)
     }
 
     private fun submitState(uiState: UiState) = viewModelScope.launch {
-        internalUiState.emit(uiState)
-        internalSearchState.value.searching = false
+        _uiState.emit(uiState)
+        _searchState.value.searching = false
     }
 
     fun submitEvent(uiEvent: UiEvent) = viewModelScope.launch {
-        mutableUiEvent.emit(uiEvent)
+        _uiEvent.emit(uiEvent)
     }
 
     sealed class UiEvent {
@@ -118,10 +105,15 @@ class HeroesViewModel(private val heroesRepositoryImpl: HeroesRepositoryImpl) : 
         object ClearQueryClicked : UiEvent()
     }
 
-    sealed class UiState {
-        data class Data(val modelsListResponse: List<BaseHeroListModel>) : UiState()
-        data class Error(val errorMessage: String) : UiState()
-        object Initial : UiState()
+    data class UiState(
+        val modelsListResponse: List<BaseHeroListModel>? = null,
+        val errorMessage: String? = null,
+        val state : State = State.Data
+    ) {
+        enum class State{
+            Data,
+            Error
+        }
     }
 
     sealed class UiAction {
