@@ -115,8 +115,8 @@ fun SearchTextField(
 
 @Composable
 fun SearchHint(
-    hint: String = "Enter a hero name",
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    hint: String = "Enter a hero name"
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,

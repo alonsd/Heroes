@@ -38,8 +38,13 @@ class HeroesViewModel(private val heroesRepositoryImpl: HeroesRepositoryImpl) : 
                     navigateToHeroDetails(event.heroModel)
                 }
                 is UiEvent.SearchQueryChanged -> {
-                    if (event.searchText.isEmpty()) { clearListToDefaultState(); return@collect }
+                    if (event.searchText.isEmpty()) {
+                        clearListToDefaultState(); return@collect
+                    }
                     getHeroesByName(event.searchText)
+                }
+                is UiEvent.SearchFocusChanged -> {
+                    submitSearchState(SearchState(_searchState.value.query, event.focused, _searchState.value.searching))
                 }
                 UiEvent.ClearQueryClicked -> {
                     clearListToDefaultState()
@@ -48,8 +53,13 @@ class HeroesViewModel(private val heroesRepositoryImpl: HeroesRepositoryImpl) : 
         }
     }
 
+    private fun submitSearchState(searchState: SearchState) = viewModelScope.launch {
+        _searchState.emit(searchState)
+    }
+
+
     private fun clearListToDefaultState() = viewModelScope.launch {
-        _searchState.value.query = ""
+        submitSearchState(SearchState("", _searchState.value.focused, _searchState.value.searching))
         val defaultStateList = _uiState.value.modelsListResponse?.subList(0, 5)
         _uiState.emit(UiState(defaultStateList))
     }
@@ -58,15 +68,15 @@ class HeroesViewModel(private val heroesRepositoryImpl: HeroesRepositoryImpl) : 
         submitAction(UiAction.NavigateToHeroesDetails(heroModel))
 
     private fun getHeroesByName(name: String) = viewModelScope.launch(Dispatchers.IO) {
-        _searchState.value = SearchState(name, _searchState.value.focused, true)
+        submitSearchState(SearchState(name, _searchState.value.focused, true))
         when (val response = heroesRepositoryImpl.getHeroesByNameWithSuggestions(name)) {
             is NetworkResponse.Success -> {
-                submitState(UiState(response.body as List<HeroesListModel>))
+                submitUiState(UiState(response.body as List<HeroesListModel>))
             }
 
             is NetworkResponse.Error -> {
                 val message = response.error.message ?: return@launch
-                submitState(UiState(errorMessage = message, state = UiState.State.Error))
+                submitUiState(UiState(errorMessage = message, state = UiState.State.Error))
             }
             else -> {}
         }
@@ -75,12 +85,12 @@ class HeroesViewModel(private val heroesRepositoryImpl: HeroesRepositoryImpl) : 
     private fun getSuggestedHeroesList() = viewModelScope.launch(Dispatchers.IO) {
         when (val response = heroesRepositoryImpl.getSuggestedHeroesList(true)) {
             is NetworkResponse.Success -> {
-                submitState(UiState(response.body as List<HeroesListModel>))
+                submitUiState(UiState(response.body as List<HeroesListModel>))
             }
 
             is NetworkResponse.Error -> {
                 val message = response.error.message ?: return@launch
-                submitState(UiState(errorMessage =  message, state = UiState.State.Error))
+                submitUiState(UiState(errorMessage = message, state = UiState.State.Error))
             }
             else -> {}
         }
@@ -90,9 +100,9 @@ class HeroesViewModel(private val heroesRepositoryImpl: HeroesRepositoryImpl) : 
         _uiAction.emit(uiAction)
     }
 
-    private fun submitState(uiState: UiState) = viewModelScope.launch {
+    private fun submitUiState(uiState: UiState) = viewModelScope.launch {
         _uiState.emit(uiState)
-        _searchState.value.searching = false
+        submitSearchState(SearchState(_searchState.value.query, _searchState.value.focused, false))
     }
 
     fun submitEvent(uiEvent: UiEvent) = viewModelScope.launch {
@@ -102,15 +112,16 @@ class HeroesViewModel(private val heroesRepositoryImpl: HeroesRepositoryImpl) : 
     sealed class UiEvent {
         data class SearchQueryChanged(val searchText: String) : UiEvent()
         data class ListItemClicked(val heroModel: HeroesListModel) : UiEvent()
+        data class SearchFocusChanged(val focused: Boolean) : UiEvent()
         object ClearQueryClicked : UiEvent()
     }
 
     data class UiState(
         val modelsListResponse: List<BaseHeroListModel>? = null,
         val errorMessage: String? = null,
-        val state : State = State.Data
+        val state: State = State.Data
     ) {
-        enum class State{
+        enum class State {
             Data,
             Error
         }

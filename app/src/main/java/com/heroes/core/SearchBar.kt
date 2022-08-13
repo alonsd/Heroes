@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
@@ -29,8 +30,8 @@ import androidx.compose.ui.unit.dp
 fun SearchBarPreview() {
     SearchBar(
         searchState = SearchState(
-            "Alon",
-            focused = false,
+            "Ethan Hunt",
+            focused = true,
             searching = false
         ),
         {},
@@ -51,11 +52,9 @@ fun SearchBar(
     onBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-
-    1 to 2
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
-    val focused by remember { mutableStateOf(searchState.focused) }
+    val focused = searchState.focused
 
     Row(
         modifier = modifier.fillMaxWidth(),
@@ -63,21 +62,25 @@ fun SearchBar(
     ) {
 
         AnimatedVisibility(visible = focused) {
-            backButton(focusManager, keyboardController, onBack)
+            BackButton(focusManager, keyboardController, onBack)
         }
-    }
 
-    SearchTextField(
-        searchState,
-        onQueryChanged,
-        onSearchFocusChange,
-        onClearQueryClicked,
-    )
+        SearchTextField(
+            searchState,
+            onQueryChanged,
+            onSearchFocusChange,
+            onClearQueryClicked,
+        )
+    }
 }
 
 @ExperimentalComposeUiApi
 @Composable
-private fun backButton(focusManager: FocusManager, keyboardController: SoftwareKeyboardController?, onBack: () -> Unit) {
+private fun BackButton(
+    focusManager: FocusManager,
+    keyboardController: SoftwareKeyboardController?,
+    onBack: () -> Unit
+) {
     IconButton(
         modifier = Modifier.padding(start = 2.dp),
         onClick = {
