@@ -9,6 +9,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
@@ -23,30 +24,30 @@ import androidx.compose.ui.unit.dp
 fun SearchTextFieldPreview() {
     SearchTextField(
         searchState = SearchState(
-            "Alon",
+            "Ethan Hunt",
             focused = false,
             searching = true
         ),
         onQueryChanged = { },
         onSearchFocusChanged = { },
         onClearQueryClicked = { },
-        FocusRequester()
+        focusRequester = FocusRequester(),
     )
 }
 
 @Composable
 fun SearchTextField(
+    modifier: Modifier = Modifier,
     searchState: SearchState,
     onQueryChanged: (String) -> Unit,
     onSearchFocusChanged: (Boolean) -> Unit,
     onClearQueryClicked: () -> Unit,
     focusRequester : FocusRequester,
-    modifier: Modifier = Modifier
+    focusManager: FocusManager = LocalFocusManager.current
 ) {
     val focused = searchState.focused
     var query = searchState.query
     val searching = searchState.searching
-    val focusManager = LocalFocusManager.current
 
     if (focused.not()) {
         focusManager.clearFocus()
@@ -140,14 +141,8 @@ fun SearchHint(
 }
 
 
-class SearchState(
-    query: String,
-    focused: Boolean,
-    searching: Boolean,
-) {
-
-    var query by mutableStateOf(query)
-    var focused by mutableStateOf(focused)
-    var searching by mutableStateOf(searching)
-
-}
+data class SearchState(
+    val query: String,
+    val focused: Boolean,
+    val searching: Boolean,
+)
