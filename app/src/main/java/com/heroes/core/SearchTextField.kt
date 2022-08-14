@@ -29,6 +29,7 @@ fun SearchTextFieldPreview() {
         onQueryChanged = { },
         onSearchFocusChanged = { },
         onClearQueryClicked = { },
+        FocusRequester()
     )
 }
 
@@ -38,9 +39,9 @@ fun SearchTextField(
     onQueryChanged: (String) -> Unit,
     onSearchFocusChanged: (Boolean) -> Unit,
     onClearQueryClicked: () -> Unit,
+    focusRequester : FocusRequester,
     modifier: Modifier = Modifier
 ) {
-    val focusRequester = remember { FocusRequester() }
     val focused = searchState.focused
     var query = searchState.query
     val searching = searchState.searching
@@ -143,7 +144,4 @@ class SearchState(
     var focused by mutableStateOf(focused)
     var searching by mutableStateOf(searching)
 
-    override fun toString(): String {
-        return "State query: $query, focused: $focused, searching: $searching "
-    }
 }

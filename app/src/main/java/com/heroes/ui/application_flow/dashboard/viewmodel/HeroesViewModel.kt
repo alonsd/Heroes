@@ -43,12 +43,19 @@ class HeroesViewModel(private val heroesRepositoryImpl: HeroesRepositoryImpl) : 
                     }
                     getHeroesByName(event.searchText)
                 }
-                is UiEvent.SearchFocusChanged -> {
-                    submitSearchState(SearchState(_searchState.value.query, event.focused, _searchState.value.searching))
+                is UiEvent.SearchBarFocusChanged -> {
+                    submitSearchState(SearchState(_searchState.value.query, event.searchBarFocused, _searchState.value.searching))
                 }
+                is UiEvent.ListFocusChanged -> {
+                    val searchStateFocused = _searchState.value.focused
+                    if (searchStateFocused.not() || event.listFocused.not()) return@collect
+                    submitSearchState(SearchState(_searchState.value.query, false, _searchState.value.searching))
+                }
+
                 UiEvent.ClearQueryClicked -> {
                     clearListToDefaultState()
                 }
+
             }
         }
     }
@@ -111,8 +118,9 @@ class HeroesViewModel(private val heroesRepositoryImpl: HeroesRepositoryImpl) : 
 
     sealed class UiEvent {
         data class SearchQueryChanged(val searchText: String) : UiEvent()
+        data class SearchBarFocusChanged(val searchBarFocused: Boolean) : UiEvent()
+        data class ListFocusChanged(val listFocused: Boolean) : UiEvent()
         data class ListItemClicked(val heroModel: HeroesListModel) : UiEvent()
-        data class SearchFocusChanged(val focused: Boolean) : UiEvent()
         object ClearQueryClicked : UiEvent()
     }
 

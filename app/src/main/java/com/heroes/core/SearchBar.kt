@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusManager
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.SoftwareKeyboardController
@@ -38,6 +39,7 @@ fun SearchBarPreview() {
         {},
         {},
         {},
+        FocusRequester(),
         modifier = Modifier
     )
 }
@@ -50,6 +52,7 @@ fun SearchBar(
     onSearchFocusChange: (Boolean) -> Unit,
     onClearQueryClicked: () -> Unit,
     onBack: () -> Unit,
+    focusRequester : FocusRequester,
     modifier: Modifier = Modifier
 ) {
     val focusManager = LocalFocusManager.current
@@ -70,6 +73,7 @@ fun SearchBar(
             onQueryChanged,
             onSearchFocusChange,
             onClearQueryClicked,
+            focusRequester
         )
     }
 }
