@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun SearchBarPreview() {
     SearchBar(
+        modifier = Modifier,
         searchState = SearchState(
             "Ethan Hunt",
             focused = true,
@@ -39,24 +40,23 @@ fun SearchBarPreview() {
         {},
         {},
         {},
-        FocusRequester(),
-        modifier = Modifier
+        FocusRequester()
     )
 }
 
 @ExperimentalComposeUiApi
 @Composable
 fun SearchBar(
+    modifier: Modifier = Modifier,
     searchState: SearchState,
     onQueryChanged: (String) -> Unit,
     onSearchFocusChange: (Boolean) -> Unit,
     onClearQueryClicked: () -> Unit,
     onBack: () -> Unit,
     focusRequester : FocusRequester,
-    modifier: Modifier = Modifier
+    keyboardController: SoftwareKeyboardController? = null
 ) {
     val focusManager = LocalFocusManager.current
-    val keyboardController = LocalSoftwareKeyboardController.current
     val focused = searchState.focused
 
     Row(

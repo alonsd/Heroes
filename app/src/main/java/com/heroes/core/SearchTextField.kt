@@ -13,6 +13,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
@@ -45,6 +46,11 @@ fun SearchTextField(
     val focused = searchState.focused
     var query = searchState.query
     val searching = searchState.searching
+    val focusManager = LocalFocusManager.current
+
+    if (focused.not()) {
+        focusManager.clearFocus()
+    }
 
     Surface(
         modifier = modifier
