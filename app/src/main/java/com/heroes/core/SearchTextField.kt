@@ -28,7 +28,7 @@ fun SearchTextFieldPreview() {
             focused = false,
             searching = true
         ),
-        onQueryChanged = { },
+        onSearchQueryChanged = { },
         onSearchFocusChanged = { },
         onClearQueryClicked = { },
         focusRequester = FocusRequester(),
@@ -39,7 +39,7 @@ fun SearchTextFieldPreview() {
 fun SearchTextField(
     modifier: Modifier = Modifier,
     searchState: SearchState,
-    onQueryChanged: (String) -> Unit,
+    onSearchQueryChanged: (String) -> Unit,
     onSearchFocusChanged: (Boolean) -> Unit,
     onClearQueryClicked: () -> Unit,
     focusRequester : FocusRequester,
@@ -84,7 +84,7 @@ fun SearchTextField(
                         value = query,
                         onValueChange = {
                             query = it
-                            onQueryChanged(it)
+                            onSearchQueryChanged(it)
                         },
                         modifier = Modifier
                             .fillMaxSize()

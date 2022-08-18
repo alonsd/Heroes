@@ -44,7 +44,7 @@ fun SearchBarPreview() {
 fun SearchBar(
     modifier: Modifier = Modifier,
     searchState: SearchState,
-    onQueryChanged: (String) -> Unit,
+    onSearchQueryChanged: (String) -> Unit,
     onSearchFocusChange: (Boolean) -> Unit,
     onClearQueryClicked: () -> Unit,
     onBack: () -> Unit,
@@ -65,7 +65,7 @@ fun SearchBar(
 
         SearchTextField(
             searchState = searchState,
-            onQueryChanged = onQueryChanged,
+            onSearchQueryChanged = onSearchQueryChanged,
             onSearchFocusChanged = onSearchFocusChange,
             onClearQueryClicked = onClearQueryClicked,
             focusRequester = focusRequester,

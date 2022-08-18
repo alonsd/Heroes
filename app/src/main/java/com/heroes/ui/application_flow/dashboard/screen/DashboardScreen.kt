@@ -34,7 +34,7 @@ fun DashboardScreen(heroesViewModel: HeroesViewModel = get()) {
 
         SearchBar(
             searchState = searchState,
-            onQueryChanged = { text ->
+            onSearchQueryChanged = { text ->
                 heroesViewModel.submitEvent(HeroesViewModel.UiEvent.SearchQueryChanged(text))
             },
             onSearchFocusChange = { focused ->
