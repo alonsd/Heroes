@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/heroesDetailsFragment"
-        android:name="com.heroes.ui.application_flow.hero_details.fragment.HeroesDetailsFragment"
+        android:name="com.heroes.ui.application_flow.hero_details.screen.HeroesDetailsFragment"
         android:label="HeroesDetailsFragment"
         tools:layout="@layout/fragment_hero_details" >
         <argument

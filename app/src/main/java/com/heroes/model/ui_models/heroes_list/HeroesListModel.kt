@@ -8,6 +8,5 @@ import kotlinx.parcelize.Parcelize
 data class HeroesListModel(val id: String, val name: String, val image: String) : BaseHeroListModel(),
     DefaultAdapterDiffUtilCallback.ModelWithId, Parcelable {
 
-
     override fun fetchId(): String = id
 }

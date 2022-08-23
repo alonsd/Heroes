@@ -11,7 +11,10 @@ import org.koin.dsl.module
 val viewModelModule = module {
     viewModelOf(::HeroesViewModel)
     viewModelOf(::HeroesListItemViewModel)
-    viewModel { params ->
-        HeroesDetailsViewModel(params.get(), get())
+//    viewModel { params ->
+//        HeroesDetailsViewModel(params.get(), get())
+//    }
+    viewModel {
+        HeroesDetailsViewModel(get())
     }
 }

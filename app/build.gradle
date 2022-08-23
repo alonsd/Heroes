@@ -5,7 +5,6 @@ apply plugin: 'kotlin-parcelize'
 apply plugin: "androidx.navigation.safeargs"
 apply plugin: 'com.google.devtools.ksp'
 
-
 android {
     compileSdkVersion 33
 
@@ -63,6 +62,14 @@ android {
             debuggable true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.debug
+        }
+    }
+
+    applicationVariants.all { variant ->
+        kotlin.sourceSets {
+            getByName(variant.name) {
+                kotlin.srcDir("build/generated/ksp/${variant.name}/kotlin")
+            }
         }
     }
 
@@ -167,10 +174,15 @@ dependencies {
     //Dependency Injection - Koin
     implementation "io.insert-koin:koin-core:3.2.0"
     implementation "io.insert-koin:koin-androidx-compose:3.2.0"
+
     // Koin for Android
     implementation "io.insert-koin:koin-android:3.2.0"
     implementation "io.insert-koin:koin-annotations:1.0.1"
     ksp "io.insert-koin:koin-ksp-compiler:1.0.1"
+
+    //Compose Destinations
+    implementation 'io.github.raamcosta.compose-destinations:animations-core:1.5.1-beta'
+    ksp 'io.github.raamcosta.compose-destinations:ksp:1.5.1-beta'
 
 }
 

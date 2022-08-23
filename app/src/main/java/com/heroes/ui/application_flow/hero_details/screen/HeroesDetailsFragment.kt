@@ -1,4 +1,4 @@
-package com.heroes.ui.application_flow.hero_details.fragment
+package com.heroes.ui.application_flow.hero_details.screen
 
 import android.content.Intent
 import android.os.Bundle
