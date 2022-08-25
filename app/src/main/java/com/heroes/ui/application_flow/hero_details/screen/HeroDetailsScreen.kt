@@ -19,20 +19,21 @@ import com.heroes.model.ui_models.heroes_list.HeroesListModel
 import com.heroes.ui.application_flow.hero_details.list_item.HeroDetailsCardItem
 import com.heroes.ui.application_flow.hero_details.viewmodel.HeroesDetailsViewModel
 import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import org.koin.androidx.compose.get
+import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.ParametersHolder
 
 
 @Destination
 @Composable
 fun HeroDetailsScreen(
     model: HeroesListModel,
-    viewModel: HeroesDetailsViewModel = get()
+    viewModel: HeroesDetailsViewModel = koinViewModel(parameters = { ParametersHolder(mutableListOf(model)) })
 ) {
-
+    
     val uiState by viewModel.uiState.collectAsState()
 
     Column(
+        Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -70,5 +71,5 @@ fun HeroDetailsScreen(
 @Preview
 @Composable
 fun HeroDetailsScreenPreview() {
-//    HeroDetailsScreen()
+    HeroDetailsScreen(HeroesListModel("12345", "Ethan Hunt", "https://www.superherodb.com/pictures2/portraits/10/100/10476.jpg"))
 }

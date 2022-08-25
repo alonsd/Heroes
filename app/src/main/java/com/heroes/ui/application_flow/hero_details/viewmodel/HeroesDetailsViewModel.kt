@@ -1,12 +1,11 @@
 package com.heroes.ui.application_flow.hero_details.viewmodel
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.haroldadmin.cnradapter.NetworkResponse
 import com.heroes.data.repository.HeroesDetailsRepositoryImpl
 import com.heroes.model.ui_models.hero_details.HeroDetailsModel
-import com.heroes.ui.application_flow.hero_details.screen.HeroesDetailsFragmentArgs
+import com.heroes.model.ui_models.heroes_list.HeroesListModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -14,7 +13,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class HeroesDetailsViewModel(
-//    private val savedStateHandle: SavedStateHandle,
+    heroListModel : HeroesListModel,
     private val heroesDetailsRepositoryImpl: HeroesDetailsRepositoryImpl
 ) : ViewModel() {
 
@@ -28,8 +27,7 @@ class HeroesDetailsViewModel(
     private val uiEvent = mutableUiEvent.asSharedFlow()
 
     init {
-//        val navArgs = getArgsModel()
-//        getAdditionalHeroDetails(navArgs.heroModel.id)
+        getAdditionalHeroDetails(heroListModel.id)
         observeUiEvents()
     }
 
@@ -43,7 +41,7 @@ class HeroesDetailsViewModel(
         }
     }
 
-//    private fun getArgsModel() = HeroesDetailsFragmentArgs.fromSavedStateHandle(savedStateHandle)
+
 
     private fun getAdditionalHeroDetails(heroId: String) = viewModelScope.launch {
         when (val response = heroesDetailsRepositoryImpl.getHeroDetails(heroId)) {
