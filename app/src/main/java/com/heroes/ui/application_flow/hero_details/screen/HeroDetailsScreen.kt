@@ -1,9 +1,15 @@
 package com.heroes.ui.application_flow.hero_details.screen
 
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.FloatingActionButton
+import androidx.compose.material.Icon
+import androidx.compose.material.Scaffold
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -29,43 +35,57 @@ fun HeroDetailsScreen(
     model: HeroModel,
     viewModel: HeroesDetailsViewModel = koinViewModel(parameters = { ParametersHolder(mutableListOf(model)) })
 ) {
-    
+
     val uiState by viewModel.uiState.collectAsState()
 
-    Column(
-        Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Image(
-            painter = rememberAsyncImagePainter(model = model.image),
-            contentDescription = null,
-            Modifier
-                .wrapContentSize()
-                .padding(16.dp)
-        )
-        if (uiState is HeroesDetailsViewModel.UiState.Data) {
-            val data = uiState as HeroesDetailsViewModel.UiState.Data
-            StandardText(
-                Modifier.padding(18.dp),
-                text = model.name,
-            )
-            StandardText(
-                Modifier.padding(32.dp),
-                text = stringResource(
-                    id = R.string.hero_details_fragment_place_of_birth,
-                    //TODO - fix this impl once VM is refactored
-                    data.heroDetailsModel.placeOfBirth
-                )
-            )
+    Scaffold(floatingActionButton = {
+        FloatingActionButton(onClick = {
+            Intent().apply {
 
-            LazyRow {
-                items(data.heroDetailsModel.heroDetailsCardModels) { heroModel ->
-                    HeroDetailsCardItem(model = heroModel)
+            }
+        }) {
+            Icon(Icons.Filled.Add, "")
+        }
+    }) { padding ->
+        Column(
+            Modifier
+                .fillMaxSize()
+                .padding(padding),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Image(
+                painter = rememberAsyncImagePainter(model = model.image),
+                contentDescription = null,
+                Modifier
+                    .wrapContentSize()
+                    .padding(16.dp)
+            )
+            if (uiState is HeroesDetailsViewModel.UiState.Data) {
+                val data = uiState as HeroesDetailsViewModel.UiState.Data
+                StandardText(
+                    Modifier.padding(18.dp),
+                    text = model.name,
+                )
+                StandardText(
+                    Modifier.padding(32.dp),
+                    text = stringResource(
+                        id = R.string.hero_details_fragment_place_of_birth,
+                        //TODO - fix this impl once VM is refactored
+                        data.heroDetailsModel.placeOfBirth
+                    )
+                )
+
+                LazyRow {
+                    items(data.heroDetailsModel.heroDetailsCardModels) { heroModel ->
+                        HeroDetailsCardItem(model = heroModel)
+                    }
                 }
             }
         }
     }
+
+
 }
 
 @Preview
