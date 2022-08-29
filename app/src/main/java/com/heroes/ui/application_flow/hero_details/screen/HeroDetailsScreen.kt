@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.heroes.R
 import com.heroes.core.StandardText
-import com.heroes.model.ui_models.heroes_list.HeroesListModel
+import com.heroes.model.ui_models.heroes_list.HeroModel
 import com.heroes.ui.application_flow.hero_details.list_item.HeroDetailsCardItem
 import com.heroes.ui.application_flow.hero_details.viewmodel.HeroesDetailsViewModel
 import com.ramcosta.composedestinations.annotation.Destination
@@ -26,7 +26,7 @@ import org.koin.core.parameter.ParametersHolder
 @Destination
 @Composable
 fun HeroDetailsScreen(
-    model: HeroesListModel,
+    model: HeroModel,
     viewModel: HeroesDetailsViewModel = koinViewModel(parameters = { ParametersHolder(mutableListOf(model)) })
 ) {
     
@@ -71,5 +71,5 @@ fun HeroDetailsScreen(
 @Preview
 @Composable
 fun HeroDetailsScreenPreview() {
-    HeroDetailsScreen(HeroesListModel("12345", "Ethan Hunt", "https://www.superherodb.com/pictures2/portraits/10/100/10476.jpg"))
+    HeroDetailsScreen(HeroModel("12345", "Ethan Hunt", "https://www.superherodb.com/pictures2/portraits/10/100/10476.jpg"))
 }

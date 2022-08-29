@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.haroldadmin.cnradapter.NetworkResponse
 import com.heroes.core.SearchState
 import com.heroes.data.repository.HeroesRepositoryImpl
-import com.heroes.model.ui_models.heroes_list.BaseHeroListModel
-import com.heroes.model.ui_models.heroes_list.HeroesListModel
+import com.heroes.model.ui_models.heroes_list.BaseHeroModel
+import com.heroes.model.ui_models.heroes_list.HeroModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -71,14 +71,14 @@ class HeroesViewModel(private val heroesRepositoryImpl: HeroesRepositoryImpl) : 
         _uiState.emit(UiState(defaultStateList))
     }
 
-    private fun navigateToHeroDetails(heroModel: HeroesListModel) =
+    private fun navigateToHeroDetails(heroModel: HeroModel) =
         submitAction(UiAction.NavigateToHeroesDetails(heroModel))
 
     private fun getHeroesByName(name: String) = viewModelScope.launch(Dispatchers.IO) {
         submitSearchState(SearchState(name, _searchState.value.focused, true))
         when (val response = heroesRepositoryImpl.getHeroesByNameWithSuggestions(name)) {
             is NetworkResponse.Success -> {
-                submitUiState(UiState(response.body as List<HeroesListModel>))
+                submitUiState(UiState(response.body as List<HeroModel>))
             }
 
             is NetworkResponse.Error -> {
@@ -92,7 +92,7 @@ class HeroesViewModel(private val heroesRepositoryImpl: HeroesRepositoryImpl) : 
     private fun getSuggestedHeroesList() = viewModelScope.launch(Dispatchers.IO) {
         when (val response = heroesRepositoryImpl.getSuggestedHeroesList(true)) {
             is NetworkResponse.Success -> {
-                submitUiState(UiState(response.body as List<HeroesListModel>))
+                submitUiState(UiState(response.body as List<HeroModel>))
             }
 
             is NetworkResponse.Error -> {
@@ -120,12 +120,12 @@ class HeroesViewModel(private val heroesRepositoryImpl: HeroesRepositoryImpl) : 
         data class SearchQueryChanged(val searchText: String) : UiEvent()
         data class SearchBarFocusChanged(val searchBarFocused: Boolean) : UiEvent()
         data class ListIsScrolling(val listIsScrolling: Boolean) : UiEvent()
-        data class ListItemClicked(val heroModel: HeroesListModel) : UiEvent()
+        data class ListItemClicked(val heroModel: HeroModel) : UiEvent()
         object ClearQueryClicked : UiEvent()
     }
 
     data class UiState(
-        val modelsListResponse: List<BaseHeroListModel>? = null,
+        val modelsListResponse: List<BaseHeroModel>? = null,
         val errorMessage: String? = null,
         val state: State = State.Data
     ) {
@@ -136,6 +136,6 @@ class HeroesViewModel(private val heroesRepositoryImpl: HeroesRepositoryImpl) : 
     }
 
     sealed class UiAction {
-        data class NavigateToHeroesDetails(val heroModel: HeroesListModel) : UiAction()
+        data class NavigateToHeroesDetails(val heroModel: HeroModel) : UiAction()
     }
 }

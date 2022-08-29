@@ -12,8 +12,8 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.tooling.preview.Preview
 import com.heroes.core.SearchBar
-import com.heroes.model.ui_models.heroes_list.HeroListSeparatorModel
-import com.heroes.model.ui_models.heroes_list.HeroesListModel
+import com.heroes.model.ui_models.heroes_list.HeroSeparatorModel
+import com.heroes.model.ui_models.heroes_list.HeroModel
 import com.heroes.ui.application_flow.dashboard.list_items.HeroesListItem
 import com.heroes.ui.application_flow.dashboard.list_items.HeroesListSeparatorItem
 import com.heroes.ui.application_flow.dashboard.viewmodel.HeroesViewModel
@@ -70,9 +70,9 @@ fun DashboardScreen(
         LazyColumn(state = listState) {
             items(uiState.modelsListResponse ?: listOf()) { model ->
                 viewModel.submitEvent(HeroesViewModel.UiEvent.ListIsScrolling(listState.isScrollInProgress))
-                if (model is HeroListSeparatorModel)
+                if (model is HeroSeparatorModel)
                     HeroesListSeparatorItem(model)
-                else if (model is HeroesListModel)
+                else if (model is HeroModel)
                     HeroesListItem(model) {
                         viewModel.submitEvent(HeroesViewModel.UiEvent.ListItemClicked(model))
                     }

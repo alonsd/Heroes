@@ -4,4 +4,4 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class HeroesListModel(val id: String, val name: String, val image: String) : BaseHeroListModel(), Parcelable
+data class HeroModel(val id: String, val name: String, val image: String) : BaseHeroModel(), Parcelable

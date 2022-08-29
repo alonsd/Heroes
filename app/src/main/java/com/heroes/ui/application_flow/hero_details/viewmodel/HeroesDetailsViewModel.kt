@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.haroldadmin.cnradapter.NetworkResponse
 import com.heroes.data.repository.HeroesDetailsRepositoryImpl
 import com.heroes.model.ui_models.hero_details.HeroDetailsModel
-import com.heroes.model.ui_models.heroes_list.HeroesListModel
+import com.heroes.model.ui_models.heroes_list.HeroModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class HeroesDetailsViewModel(
-    heroListModel : HeroesListModel,
+    heroListModel : HeroModel,
     private val heroesDetailsRepositoryImpl: HeroesDetailsRepositoryImpl
 ) : ViewModel() {
 
