@@ -6,10 +6,10 @@ import com.heroes.model.ui_models.heroes_list.BaseHeroModel
 import com.heroes.model.ui_models.heroes_list.HeroSeparatorModel
 import com.heroes.model.ui_models.heroes_list.HeroModel
 import com.heroes.model.ui_models.heroes_list.enums.HeroesListSeparatorType
-import com.heroes.utils.application.App
-import com.heroes.utils.constants.DefaultData
-import com.heroes.utils.constants.NetworkConstants
-import com.heroes.utils.constants.NetworkConstants.SUCCESS_RESULT_RESPONSE
+import com.heroes.core.App
+import com.heroes.core.constants.DefaultData
+import com.heroes.core.constants.NetworkConstants
+import com.heroes.core.constants.NetworkConstants.SUCCESS_RESULT_RESPONSE
 import com.haroldadmin.cnradapter.NetworkResponse
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async

@@ -1,4 +1,4 @@
-package com.heroes.utils.constants
+package com.heroes.core.constants
 
 object CacheConstants {
 

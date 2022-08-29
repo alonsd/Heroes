@@ -2,7 +2,7 @@ package com.heroes.service_locator
 
 import com.heroes.data.source.remote.api.HeroesApi
 import com.heroes.data.source.remote.api.HeroesDetailsApi
-import com.heroes.utils.constants.NetworkConstants
+import com.heroes.core.constants.NetworkConstants
 import com.haroldadmin.cnradapter.NetworkResponseAdapterFactory
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

@@ -1,12 +1,12 @@
-package com.heroes.utils.extensions
+package com.heroes.core.extensions
 
 import android.app.Activity
 import android.app.Application
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import androidx.fragment.app.Fragment
-import com.heroes.utils.constants.SharedPreferencesConstants.HEROES_SHARED_PREFERENCES
-import com.heroes.utils.constants.SharedPreferencesConstants.IMAGES_CACHE_TIME
+import com.heroes.core.constants.SharedPreferencesConstants.HEROES_SHARED_PREFERENCES
+import com.heroes.core.constants.SharedPreferencesConstants.IMAGES_CACHE_TIME
 
 
 var SharedPreferences.imagesCacheTime

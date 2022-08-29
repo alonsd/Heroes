@@ -1,4 +1,4 @@
-package com.heroes.core
+package com.heroes.core.ui
 
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
