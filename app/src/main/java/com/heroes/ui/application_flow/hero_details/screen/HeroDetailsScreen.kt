@@ -15,6 +15,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -37,11 +38,27 @@ fun HeroDetailsScreen(
 ) {
 
     val uiState by viewModel.uiState.collectAsState()
+    val context = LocalContext.current
+
+    val heroDetailsForSharing = stringResource(
+        R.string.hero_details_fragment_hero_details_for_sharing,
+        model.name,
+        if(uiState is HeroesDetailsViewModel.UiState.Data) {
+            (uiState as HeroesDetailsViewModel.UiState.Data).heroDetailsModel.placeOfBirth
+        } else "" ,
+        model.image
+    )
 
     Scaffold(floatingActionButton = {
         FloatingActionButton(onClick = {
             Intent().apply {
-
+                val sendIntent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    putExtra(Intent.EXTRA_TEXT, heroDetailsForSharing)
+                    type = "text/plain"
+                }
+                val shareIntent = Intent.createChooser(sendIntent, null)
+                context.startActivity(shareIntent)
             }
         }) {
             Icon(Icons.Filled.Add, "")
