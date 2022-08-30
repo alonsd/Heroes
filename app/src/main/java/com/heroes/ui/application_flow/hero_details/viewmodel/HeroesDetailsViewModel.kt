@@ -12,12 +12,13 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
+
 class HeroesDetailsViewModel(
-    heroListModel : HeroModel,
+    heroListModel: HeroModel,
     private val heroesDetailsRepositoryImpl: HeroesDetailsRepositoryImpl
 ) : ViewModel() {
 
-    private val internalUiState = MutableStateFlow<UiState>(UiState.Initial)
+    private val internalUiState = MutableStateFlow(UiState())
     val uiState = internalUiState.asStateFlow()
 
     private val internalUiAction = MutableSharedFlow<UiAction>()
@@ -33,7 +34,7 @@ class HeroesDetailsViewModel(
 
     private fun observeUiEvents() = viewModelScope.launch {
         uiEvent.collect { event ->
-            when(event) {
+            when (event) {
                 UiEvent.FloatingActionButtonClicked -> {
                     submitAction(UiAction.ShareHeroesDetails)
                 }
@@ -42,18 +43,25 @@ class HeroesDetailsViewModel(
     }
 
 
-
     private fun getAdditionalHeroDetails(heroId: String) = viewModelScope.launch {
         when (val response = heroesDetailsRepositoryImpl.getHeroDetails(heroId)) {
             is NetworkResponse.Success -> {
                 val heroDetailsModel = response.body as HeroDetailsModel
                 val showHeroPlaceOfBirth = heroDetailsModel.placeOfBirth.length >= 2
-                internalUiState.emit(UiState.Data(heroDetailsModel, showHeroPlaceOfBirth))
+                val uiState = internalUiState.value.copy(
+                    heroDetailsModel = heroDetailsModel,
+                    showHeroPlaceOfBirth = showHeroPlaceOfBirth, state = UiState.State.Data
+                )
+                internalUiState.emit(uiState)
             }
 
             is NetworkResponse.Error -> {
                 val message = response.error.message ?: return@launch
-                internalUiState.emit(UiState.Error(message))
+                val uiState = internalUiState.value.copy(
+                    errorMessage = message
+                    , state = UiState.State.Data
+                )
+                internalUiState.emit(uiState)
             }
             else -> Unit
         }
@@ -67,11 +75,19 @@ class HeroesDetailsViewModel(
         object FloatingActionButtonClicked : UiEvent()
     }
 
-    sealed class UiState {
-        data class Data(val heroDetailsModel: HeroDetailsModel, val showHeroPlaceOfBirth: Boolean) : UiState()
-        data class Error(val errorMessage: String) : UiState()
-        object Initial : UiState()
+    data class UiState(
+        val heroDetailsModel: HeroDetailsModel = HeroDetailsModel("", emptyList()),
+        val showHeroPlaceOfBirth: Boolean = true,
+        val errorMessage: String = "",
+        val state: State = State.Initial
+    ) {
+        enum class State {
+            Data,
+            Error,
+            Initial
+        }
     }
+
 
     sealed class UiAction {
         object ShareHeroesDetails : UiAction()

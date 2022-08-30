@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.tooling.preview.Preview
-import com.heroes.core.ui.SearchBar
+import com.heroes.core.ui.search.SearchBar
 import com.heroes.model.ui_models.heroes_list.HeroSeparatorModel
 import com.heroes.model.ui_models.heroes_list.HeroModel
 import com.heroes.ui.application_flow.dashboard.list_items.HeroesListItem

@@ -1,4 +1,4 @@
-package com.heroes.core.ui
+package com.heroes.core.ui.search
 
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
