@@ -1,4 +1,4 @@
-package com.heroes.utils.application
+package com.heroes.core
 
 import android.app.Application
 import com.heroes.service_locator.*

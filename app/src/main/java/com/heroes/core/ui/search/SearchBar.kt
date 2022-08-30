@@ -1,4 +1,4 @@
-package com.heroes.core
+package com.heroes.core.ui.search
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Row

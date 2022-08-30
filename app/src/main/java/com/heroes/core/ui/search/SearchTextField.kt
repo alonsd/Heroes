@@ -1,4 +1,4 @@
-package com.heroes.core
+package com.heroes.core.ui.search
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
