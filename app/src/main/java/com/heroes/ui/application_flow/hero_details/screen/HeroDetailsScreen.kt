@@ -28,13 +28,12 @@ fun HeroDetailsScreen(
 
     when (uiAction) {
         is HeroesDetailsViewModel.UiAction.ShareHeroesDetails -> {
+            if (uiState.state != HeroesDetailsViewModel.UiState.State.Data) return
             val context = LocalContext.current
             val heroDetailsForSharing = stringResource(
                 R.string.hero_details_fragment_hero_details_for_sharing,
                 model.name,
-                if (uiState.state == HeroesDetailsViewModel.UiState.State.Data) {
-                    uiState.heroDetailsModel.placeOfBirth
-                } else "",
+                uiState.heroDetailsModel.placeOfBirth,
                 model.image
             )
             shareInformationAsText(heroDetailsForSharing, context)

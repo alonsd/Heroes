@@ -87,8 +87,7 @@ class HeroesDetailsViewModel(
             Initial
         }
     }
-
-
+    
     sealed class UiAction {
         object ShareHeroesDetails : UiAction()
     }

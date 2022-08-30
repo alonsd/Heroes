@@ -48,21 +48,20 @@ fun HeroDetailsDataState(model: HeroModel, uiState: HeroesDetailsViewModel.UiSta
                 Modifier.padding(18.dp),
                 text = model.name,
             )
-            StandardText(
-                Modifier.padding(32.dp),
-                text = stringResource(
-                    id = R.string.hero_details_fragment_place_of_birth,
-                    //TODO - fix this impl once VM is refactored
-                    uiState.heroDetailsModel.placeOfBirth
+            if (uiState.showHeroPlaceOfBirth) {
+                StandardText(
+                    Modifier.padding(32.dp),
+                    text = stringResource(
+                        id = R.string.hero_details_fragment_place_of_birth,
+                        uiState.heroDetailsModel.placeOfBirth
+                    )
                 )
-            )
-
+            }
             LazyRow {
                 items(uiState.heroDetailsModel.heroDetailsCardModels) { heroModel ->
                     HeroDetailsCardItem(model = heroModel)
                 }
             }
-
         }
     }
 }
