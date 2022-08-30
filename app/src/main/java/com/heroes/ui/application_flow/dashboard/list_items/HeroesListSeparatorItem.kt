@@ -12,12 +12,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.heroes.R
-import com.heroes.model.ui_models.heroes_list.HeroListSeparatorModel
+import com.heroes.model.ui_models.heroes_list.HeroSeparatorModel
 import com.heroes.model.ui_models.heroes_list.enums.HeroesListSeparatorType
 
 
 @Composable
-fun HeroesListSeparatorItem(separatorType: HeroListSeparatorModel) {
+fun HeroesListSeparatorItem(separatorType: HeroSeparatorModel) {
     Row(
         modifier = Modifier
             .fillMaxSize()

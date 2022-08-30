@@ -3,29 +3,28 @@ package com.heroes.ui.application_flow.dashboard.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.haroldadmin.cnradapter.NetworkResponse
+import com.heroes.core.ui.search.SearchState
 import com.heroes.data.repository.HeroesRepositoryImpl
-import com.heroes.model.ui_models.heroes_list.BaseHeroListModel
-import com.heroes.model.ui_models.heroes_list.HeroesListModel
+import com.heroes.model.ui_models.heroes_list.BaseHeroModel
+import com.heroes.model.ui_models.heroes_list.HeroModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class HeroesViewModel(private val heroesRepositoryImpl: HeroesRepositoryImpl) : ViewModel() {
 
-    private val internalUiState = MutableStateFlow<UiState>(UiState.Initial)
-    val uiState = internalUiState.asStateFlow()
+    private val _uiState = MutableStateFlow(UiState())
+    val uiState = _uiState.asStateFlow()
 
-    private val internalUiAction = MutableSharedFlow<UiAction>()
-    val uiAction = internalUiAction.asSharedFlow()
+    private val _uiAction = MutableSharedFlow<UiAction>()
+    val uiAction = _uiAction.asSharedFlow()
 
-    private val mutableUiEvent = MutableSharedFlow<UiEvent>()
-    private val uiEvent = mutableUiEvent.asSharedFlow()
+    private val _uiEvent = MutableSharedFlow<UiEvent>()
+    private val uiEvent = _uiEvent.asSharedFlow()
 
-    private val internalProgressBarVisible = MutableStateFlow(false)
-    val progressbarVisible = internalProgressBarVisible.asStateFlow()
+    private val _searchState = MutableStateFlow(SearchState("", focused = false, searching = true))
+    val searchState = _searchState.asStateFlow()
+
 
     init {
         observeUiEvents()
@@ -39,70 +38,104 @@ class HeroesViewModel(private val heroesRepositoryImpl: HeroesRepositoryImpl) : 
                     navigateToHeroDetails(event.heroModel)
                 }
                 is UiEvent.SearchQueryChanged -> {
+                    if (event.searchText.isEmpty()) {
+                        clearListToDefaultState(); return@collect
+                    }
                     getHeroesByName(event.searchText)
                 }
+                is UiEvent.SearchBarFocusChanged -> {
+                    submitSearchState(SearchState(_searchState.value.query, event.searchBarFocused, _searchState.value.searching))
+                }
+                is UiEvent.ListIsScrolling -> {
+                    val searchStateFocused = _searchState.value.focused
+                    if (searchStateFocused.not() || event.listIsScrolling.not()) return@collect
+                    submitSearchState(SearchState(_searchState.value.query, false, _searchState.value.searching))
+                }
+
+                UiEvent.ClearQueryClicked -> {
+                    clearListToDefaultState()
+                }
+
             }
         }
     }
 
-    private fun navigateToHeroDetails(heroModel: HeroesListModel) =
+    private fun submitSearchState(searchState: SearchState) = viewModelScope.launch {
+        _searchState.emit(searchState)
+    }
+
+
+    private fun clearListToDefaultState() = viewModelScope.launch {
+        submitSearchState(SearchState("", _searchState.value.focused, _searchState.value.searching))
+        val defaultStateList = _uiState.value.modelsListResponse?.subList(0, 5)
+        _uiState.emit(UiState(defaultStateList))
+    }
+
+    private fun navigateToHeroDetails(heroModel: HeroModel) =
         submitAction(UiAction.NavigateToHeroesDetails(heroModel))
 
     private fun getHeroesByName(name: String) = viewModelScope.launch(Dispatchers.IO) {
-        internalProgressBarVisible.value = true
+        submitSearchState(SearchState(name, _searchState.value.focused, true))
         when (val response = heroesRepositoryImpl.getHeroesByNameWithSuggestions(name)) {
             is NetworkResponse.Success -> {
-                submitState(UiState.Data(response.body as List<HeroesListModel>))
+                submitUiState(UiState(response.body as List<HeroModel>))
             }
 
             is NetworkResponse.Error -> {
                 val message = response.error.message ?: return@launch
-                submitState(UiState.Error(message))
+                submitUiState(UiState(errorMessage = message, state = UiState.State.Error))
             }
             else -> {}
         }
     }
 
     private fun getSuggestedHeroesList() = viewModelScope.launch(Dispatchers.IO) {
-        internalProgressBarVisible.value = true
         when (val response = heroesRepositoryImpl.getSuggestedHeroesList(true)) {
             is NetworkResponse.Success -> {
-                submitState(UiState.Data(response.body as List<HeroesListModel>))
+                submitUiState(UiState(response.body as List<HeroModel>))
             }
 
             is NetworkResponse.Error -> {
                 val message = response.error.message ?: return@launch
-                submitState(UiState.Error(message))
+                submitUiState(UiState(errorMessage = message, state = UiState.State.Error))
             }
             else -> {}
         }
     }
 
     private fun submitAction(uiAction: UiAction) = viewModelScope.launch {
-        internalUiAction.emit(uiAction)
+        _uiAction.emit(uiAction)
     }
 
-    private fun submitState(uiState: UiState) = viewModelScope.launch {
-        internalUiState.emit(uiState)
-        internalProgressBarVisible.value = false
+    private fun submitUiState(uiState: UiState) = viewModelScope.launch {
+        _uiState.emit(uiState)
+        submitSearchState(SearchState(_searchState.value.query, _searchState.value.focused, false))
     }
 
     fun submitEvent(uiEvent: UiEvent) = viewModelScope.launch {
-        mutableUiEvent.emit(uiEvent)
+        _uiEvent.emit(uiEvent)
     }
 
     sealed class UiEvent {
         data class SearchQueryChanged(val searchText: String) : UiEvent()
-        data class ListItemClicked(val heroModel: HeroesListModel) : UiEvent()
+        data class SearchBarFocusChanged(val searchBarFocused: Boolean) : UiEvent()
+        data class ListIsScrolling(val listIsScrolling: Boolean) : UiEvent()
+        data class ListItemClicked(val heroModel: HeroModel) : UiEvent()
+        object ClearQueryClicked : UiEvent()
     }
 
-    sealed class UiState {
-        data class Data(val modelsListResponse: List<BaseHeroListModel>) : UiState()
-        data class Error(val errorMessage: String) : UiState()
-        object Initial : UiState()
+    data class UiState(
+        val modelsListResponse: List<BaseHeroModel>? = null,
+        val errorMessage: String? = null,
+        val state: State = State.Data
+    ) {
+        enum class State {
+            Data,
+            Error
+        }
     }
 
     sealed class UiAction {
-        data class NavigateToHeroesDetails(val heroModel: HeroesListModel) : UiAction()
+        data class NavigateToHeroesDetails(val heroModel: HeroModel) : UiAction()
     }
 }

@@ -1,6 +1,9 @@
 package com.heroes.ui.application_flow.hero_details.list_item
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
@@ -14,9 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.recyclerview.widget.RecyclerView
 import com.heroes.R
-import com.heroes.databinding.ViewholderHeroCardBinding
 import com.heroes.model.ui_models.hero_details.HeroDetailsCardModel
 
 

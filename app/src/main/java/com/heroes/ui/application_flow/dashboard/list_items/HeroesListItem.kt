@@ -11,10 +11,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
-import com.heroes.model.ui_models.heroes_list.HeroesListModel
+import com.heroes.model.ui_models.heroes_list.HeroModel
 
 @Composable
-fun HeroesListItem(model: HeroesListModel, onClick: (heroModel: HeroesListModel) -> Unit) {
+fun HeroesListItem(model: HeroModel, onClick: (heroModel: HeroModel) -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxSize()
