@@ -6,10 +6,10 @@ import com.heroes.model.ui_models.hero_details.HeroDetailsCardModel
 import com.heroes.model.ui_models.hero_details.HeroDetailsModel
 import com.heroes.core.constants.NetworkConstants
 
-class RemoteHeroDetailsDataSourceImp(private val heroesDetailsApi: HeroesDetailsApi) {
+class RemoteHeroDetailsDataSourceImp(private val heroesDetailsApi: HeroesDetailsApi) : RemoteHeroDetailsDataSource {
 
 
-    suspend fun getHeroDetails(heroId: String): NetworkResponse<*, String> {
+    override suspend fun getHeroDetails(heroId: String): NetworkResponse<*, String> {
         val heroAppearance = heroesDetailsApi.getHeroAppearance(NetworkConstants.TOKEN, heroId)
         val heroWork = heroesDetailsApi.getHeroWork(NetworkConstants.TOKEN, heroId)
         val heroBiography = heroesDetailsApi.getHeroBiography(NetworkConstants.TOKEN, heroId)
