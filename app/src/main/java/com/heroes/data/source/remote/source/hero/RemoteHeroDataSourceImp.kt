@@ -11,6 +11,7 @@ import com.heroes.core.constants.DefaultData
 import com.heroes.core.constants.NetworkConstants
 import com.heroes.core.constants.NetworkConstants.SUCCESS_RESULT_RESPONSE
 import com.haroldadmin.cnradapter.NetworkResponse
+import com.heroes.core.constants.NetworkConstants.SUCCESS_RESULT_CODE
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -25,7 +26,7 @@ class RemoteHeroDataSourceImp(private val heroesApi: HeroesApi) : RemoteHeroData
         val heroesResult = getHeroesByName(name)
         if (heroesResult is NetworkResponse.Error) return heroesResult
         if ((heroesResult as NetworkResponse.Success).body.response != SUCCESS_RESULT_RESPONSE) {
-            return NetworkResponse.UnknownError(Throwable(App.instance.getString(R.string.remote_hero_data_source)))
+            return NetworkResponse.Success(emptyList<BaseHeroModel>(), code = SUCCESS_RESULT_CODE)
         }
         val suggestedHeroesList = (suggestedHeroesResult as NetworkResponse.Success).body as List<HeroModel>
         val heroesListsWithSeparationModels = createHeroListWithSeparation(suggestedHeroesList)
@@ -35,7 +36,7 @@ class RemoteHeroDataSourceImp(private val heroesApi: HeroesApi) : RemoteHeroData
             val heroName = hero.name
             heroesListsWithSeparationModels.add(HeroModel(id, heroName, imageUrl))
         }
-        return NetworkResponse.Success(heroesListsWithSeparationModels, code = NetworkConstants.SUCCESS_RESULT_CODE)
+        return NetworkResponse.Success(heroesListsWithSeparationModels, code = SUCCESS_RESULT_CODE)
     }
 
     /**
@@ -61,12 +62,12 @@ class RemoteHeroDataSourceImp(private val heroesApi: HeroesApi) : RemoteHeroData
             suggestedHeroes.add(element[0])
         }
         if (addSeparation.not())
-            return NetworkResponse.Success(suggestedHeroes, code = NetworkConstants.SUCCESS_RESULT_CODE)
+            return NetworkResponse.Success(suggestedHeroes, code = SUCCESS_RESULT_CODE)
         val heroesListWithSeparation = createHeroListWithSeparation(suggestedHeroes)
-        return NetworkResponse.Success(heroesListWithSeparation, code = NetworkConstants.SUCCESS_RESULT_CODE)
+        return NetworkResponse.Success(heroesListWithSeparation, code = SUCCESS_RESULT_CODE)
     }
 
-    private suspend fun getHeroesByName(name : String) = heroesApi.getHeroesByName(NetworkConstants.TOKEN, name)
+    private suspend fun getHeroesByName(name: String) = heroesApi.getHeroesByName(NetworkConstants.TOKEN, name)
 
     private fun createHeroListWithSeparation(suggestedHeroesResult: List<HeroModel>): MutableList<BaseHeroModel> {
         val heroesListsModels = mutableListOf<BaseHeroModel>()
@@ -80,7 +81,7 @@ class RemoteHeroDataSourceImp(private val heroesApi: HeroesApi) : RemoteHeroData
         val heroesResult = getHeroesByName(name)
         if (heroesResult is NetworkResponse.Error) return heroesResult
         if ((heroesResult as NetworkResponse.Success).body.response != SUCCESS_RESULT_RESPONSE) {
-            return NetworkResponse.UnknownError(Throwable(App.instance.getString(R.string.remote_hero_data_source)))
+            return NetworkResponse.UnknownError(Throwable(App.instance.getString(R.string.remote_hero_data_source_hero_not_found)))
         }
         val heroesListsModels = mutableListOf<HeroModel>()
         heroesResult.body.heroesList.forEach { hero ->
@@ -89,7 +90,7 @@ class RemoteHeroDataSourceImp(private val heroesApi: HeroesApi) : RemoteHeroData
             val heroName = hero.name
             heroesListsModels.add(HeroModel(id, heroName, imageUrl))
         }
-        return NetworkResponse.Success(heroesListsModels, code = NetworkConstants.SUCCESS_RESULT_CODE)
+        return NetworkResponse.Success(heroesListsModels, code = SUCCESS_RESULT_CODE)
     }
 
 

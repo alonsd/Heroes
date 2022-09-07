@@ -8,22 +8,25 @@ import com.heroes.data.repository.HeroesRepositoryImpl
 import com.heroes.model.ui_models.heroes_list.BaseHeroModel
 import com.heroes.model.ui_models.heroes_list.HeroModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
-class HeroesViewModel(private val heroesRepositoryImpl: HeroesRepositoryImpl) : ViewModel() {
+class DashboardViewModel(private val heroesRepositoryImpl: HeroesRepositoryImpl) : ViewModel() {
 
     private val _uiState = MutableStateFlow(UiState())
     val uiState = _uiState.asStateFlow()
 
-    private val _uiAction = MutableSharedFlow<UiAction>()
-    val uiAction = _uiAction.asSharedFlow()
+    private val _uiAction = Channel<UiAction>()
+    val uiAction = _uiAction.receiveAsFlow()
 
     private val _uiEvent = MutableSharedFlow<UiEvent>()
     private val uiEvent = _uiEvent.asSharedFlow()
 
     private val _searchState = MutableStateFlow(SearchState("", focused = false, searching = true))
     val searchState = _searchState.asStateFlow()
+
+    private val suggestedHeroes = mutableListOf<BaseHeroModel>()
 
 
     init {
@@ -55,7 +58,6 @@ class HeroesViewModel(private val heroesRepositoryImpl: HeroesRepositoryImpl) : 
                 UiEvent.ClearQueryClicked -> {
                     clearListToDefaultState()
                 }
-
             }
         }
     }
@@ -66,9 +68,8 @@ class HeroesViewModel(private val heroesRepositoryImpl: HeroesRepositoryImpl) : 
 
 
     private fun clearListToDefaultState() = viewModelScope.launch {
-        submitSearchState(SearchState("", _searchState.value.focused, _searchState.value.searching))
-        val defaultStateList = _uiState.value.modelsListResponse?.subList(0, 5)
-        _uiState.emit(UiState(defaultStateList))
+        submitSearchState(SearchState("", _searchState.value.focused, false))
+        _uiState.emit(UiState(state = UiState.State.Data, heroesList = suggestedHeroes))
     }
 
     private fun navigateToHeroDetails(heroModel: HeroModel) =
@@ -78,7 +79,12 @@ class HeroesViewModel(private val heroesRepositoryImpl: HeroesRepositoryImpl) : 
         submitSearchState(SearchState(name, _searchState.value.focused, true))
         when (val response = heroesRepositoryImpl.getHeroesByNameWithSuggestions(name)) {
             is NetworkResponse.Success -> {
-                submitUiState(UiState(response.body as List<HeroModel>))
+                val heroesList = response.body as List<HeroModel>
+                if (heroesList.isEmpty()) {
+                    clearListToDefaultState()
+                    return@launch
+                }
+                submitUiState(UiState(state = UiState.State.Data, heroesList = heroesList))
             }
 
             is NetworkResponse.Error -> {
@@ -92,7 +98,9 @@ class HeroesViewModel(private val heroesRepositoryImpl: HeroesRepositoryImpl) : 
     private fun getSuggestedHeroesList() = viewModelScope.launch(Dispatchers.IO) {
         when (val response = heroesRepositoryImpl.getSuggestedHeroesList(true)) {
             is NetworkResponse.Success -> {
-                submitUiState(UiState(response.body as List<HeroModel>))
+                val heroesList = response.body as List<HeroModel>
+                suggestedHeroes.addAll(heroesList)
+                submitUiState(UiState(state = UiState.State.Data, heroesList = heroesList))
             }
 
             is NetworkResponse.Error -> {
@@ -104,7 +112,7 @@ class HeroesViewModel(private val heroesRepositoryImpl: HeroesRepositoryImpl) : 
     }
 
     private fun submitAction(uiAction: UiAction) = viewModelScope.launch {
-        _uiAction.emit(uiAction)
+        _uiAction.send(uiAction)
     }
 
     private fun submitUiState(uiState: UiState) = viewModelScope.launch {
@@ -125,13 +133,14 @@ class HeroesViewModel(private val heroesRepositoryImpl: HeroesRepositoryImpl) : 
     }
 
     data class UiState(
-        val modelsListResponse: List<BaseHeroModel>? = null,
-        val errorMessage: String? = null,
-        val state: State = State.Data
+        val heroesList: List<BaseHeroModel> = emptyList(),
+        val errorMessage: String = "",
+        val state: State = State.Initial
     ) {
         enum class State {
             Data,
-            Error
+            Error,
+            Initial
         }
     }
 

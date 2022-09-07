@@ -27,6 +27,6 @@
     <string name="viewholder_hero_card_description">%1$s: %2$s</string>
 
     <!--    RemoteHeroDataSource-->
-    <string name="remote_hero_data_source">Character with given name not found</string>
+    <string name="remote_hero_data_source_hero_not_found">Hero with given name not found</string>
 
 </resources>

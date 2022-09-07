@@ -1,22 +1,13 @@
 package com.heroes.ui.application_flow.dashboard.screen
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.tooling.preview.Preview
-import com.heroes.core.ui.search.SearchBar
-import com.heroes.model.ui_models.heroes_list.HeroSeparatorModel
-import com.heroes.model.ui_models.heroes_list.HeroModel
-import com.heroes.ui.application_flow.dashboard.list_items.HeroesListItem
-import com.heroes.ui.application_flow.dashboard.list_items.HeroesListSeparatorItem
-import com.heroes.ui.application_flow.dashboard.viewmodel.HeroesViewModel
+import com.heroes.core.ui.loading.GeneralLoadingState
+import com.heroes.ui.application_flow.dashboard.viewmodel.DashboardViewModel
 import com.heroes.ui.application_flow.destinations.HeroDetailsScreenDestination
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
@@ -29,20 +20,14 @@ import org.koin.androidx.compose.get
 @Composable
 fun DashboardScreen(
     navigator: DestinationsNavigator,
-    viewModel: HeroesViewModel = get()
+    viewModel: DashboardViewModel = get()
 ) {
-
-    val searchState by viewModel.searchState.collectAsState()
     val uiState by viewModel.uiState.collectAsState()
-    val listState = rememberLazyListState()
-    val keyboardController = LocalSoftwareKeyboardController.current
-    val focusRequester = remember { FocusRequester() }
 
-
-    LaunchedEffect(key1 = viewModel.uiAction) {
+    LaunchedEffect(key1 = "") {
         viewModel.uiAction.collect { uiAction ->
             when (uiAction) {
-                is HeroesViewModel.UiAction.NavigateToHeroesDetails -> {
+                is DashboardViewModel.UiAction.NavigateToHeroesDetails -> {
                     navigator.navigate(HeroDetailsScreenDestination(uiAction.heroModel))
                 }
             }
@@ -50,33 +35,15 @@ fun DashboardScreen(
     }
 
 
-    Column(modifier = Modifier.fillMaxSize()) {
+    when (uiState.state) {
+        DashboardViewModel.UiState.State.Data -> {
+            DashboardDataState(viewModel, uiState.heroesList)
+        }
+        DashboardViewModel.UiState.State.Error -> {
 
-        SearchBar(
-            searchState = searchState,
-            onSearchQueryChanged = { text ->
-                viewModel.submitEvent(HeroesViewModel.UiEvent.SearchQueryChanged(text))
-            },
-            onSearchFocusChange = { focused ->
-                viewModel.submitEvent(HeroesViewModel.UiEvent.SearchBarFocusChanged(focused))
-            },
-            onClearQueryClicked = {
-                viewModel.submitEvent(HeroesViewModel.UiEvent.ClearQueryClicked)
-            },
-            onBack = {},
-            focusRequester = focusRequester,
-            keyboardController = keyboardController
-        )
-        LazyColumn(state = listState) {
-            items(uiState.modelsListResponse ?: listOf()) { model ->
-                viewModel.submitEvent(HeroesViewModel.UiEvent.ListIsScrolling(listState.isScrollInProgress))
-                if (model is HeroSeparatorModel)
-                    HeroesListSeparatorItem(model)
-                else if (model is HeroModel)
-                    HeroesListItem(model) {
-                        viewModel.submitEvent(HeroesViewModel.UiEvent.ListItemClicked(model))
-                    }
-            }
+        }
+        DashboardViewModel.UiState.State.Initial -> {
+            GeneralLoadingState()
         }
     }
 }
