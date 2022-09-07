@@ -8,8 +8,10 @@ import com.heroes.data.repository.HeroesRepositoryImpl
 import com.heroes.model.ui_models.heroes_list.BaseHeroModel
 import com.heroes.model.ui_models.heroes_list.HeroModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class DashboardViewModel(private val heroesRepositoryImpl: HeroesRepositoryImpl) : ViewModel() {
@@ -17,8 +19,8 @@ class DashboardViewModel(private val heroesRepositoryImpl: HeroesRepositoryImpl)
     private val _uiState = MutableStateFlow(UiState())
     val uiState = _uiState.asStateFlow()
 
-    private val _uiAction = Channel<UiAction>()
-    val uiAction = _uiAction.receiveAsFlow()
+    private val _uiAction = MutableSharedFlow<UiAction>()
+    val uiAction = _uiAction.asSharedFlow()
 
     private val _uiEvent = MutableSharedFlow<UiEvent>()
     private val uiEvent = _uiEvent.asSharedFlow()
@@ -27,7 +29,6 @@ class DashboardViewModel(private val heroesRepositoryImpl: HeroesRepositoryImpl)
     val searchState = _searchState.asStateFlow()
 
     private val suggestedHeroes = mutableListOf<BaseHeroModel>()
-
 
     init {
         observeUiEvents()
@@ -112,7 +113,7 @@ class DashboardViewModel(private val heroesRepositoryImpl: HeroesRepositoryImpl)
     }
 
     private fun submitAction(uiAction: UiAction) = viewModelScope.launch {
-        _uiAction.send(uiAction)
+        _uiAction.emit(uiAction)
     }
 
     private fun submitUiState(uiState: UiState) = viewModelScope.launch {

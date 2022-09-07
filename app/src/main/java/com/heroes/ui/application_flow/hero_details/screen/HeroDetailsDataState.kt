@@ -52,7 +52,7 @@ fun HeroDetailsDataState(model: HeroModel, uiState: HeroesDetailsViewModel.UiSta
                 StandardText(
                     Modifier.padding(32.dp),
                     text = stringResource(
-                        id = R.string.hero_details_fragment_place_of_birth,
+                        id = R.string.hero_details_screen_place_of_birth,
                         uiState.heroDetailsModel.placeOfBirth
                     )
                 )

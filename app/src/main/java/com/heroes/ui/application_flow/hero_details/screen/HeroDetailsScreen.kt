@@ -31,7 +31,7 @@ fun HeroDetailsScreen(
             if (uiState.state != HeroesDetailsViewModel.UiState.State.Data) return
             val context = LocalContext.current
             val heroDetailsForSharing = stringResource(
-                R.string.hero_details_fragment_hero_details_for_sharing,
+                R.string.hero_details_screen_hero_details_for_sharing,
                 model.name,
                 uiState.heroDetailsModel.placeOfBirth,
                 model.image

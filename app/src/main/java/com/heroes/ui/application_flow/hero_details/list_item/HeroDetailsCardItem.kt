@@ -51,7 +51,7 @@ fun HeroDetailsCardItem(model: HeroDetailsCardModel) {
             Text(
                 modifier = Modifier.padding(15.dp),
                 text = stringResource(
-                    id = R.string.viewholder_hero_card_description,
+                    id = R.string.list_item_hero_card_description,
                     model.subDetailsTitle, model.subDetailsValue
                 ),
                 fontSize = 16.sp,

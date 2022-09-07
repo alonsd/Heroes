@@ -25,8 +25,8 @@ fun HeroesListSeparatorItem(separatorType: HeroSeparatorModel) {
             .padding(16.dp)
     ) {
         val separatorText = when (separatorType.type) {
-            HeroesListSeparatorType.SUGGESTIONS -> stringResource(R.string.viewholder_heroes_separator_suggestions)
-            HeroesListSeparatorType.SEARCH -> stringResource(R.string.viewholder_heroes_separator_search)
+            HeroesListSeparatorType.SUGGESTIONS -> stringResource(R.string.list_item_heroes_separator_suggestions)
+            HeroesListSeparatorType.SEARCH -> stringResource(R.string.list_item_heroes_separator_search)
         }
         Text(
             text = separatorText,
