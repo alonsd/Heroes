@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.haroldadmin.cnradapter.NetworkResponse
 import com.heroes.core.ui.search.SearchState
-import com.heroes.data.repository.HeroesRepositoryImpl
+import com.heroes.data.repository.HeroesRepository
 import com.heroes.model.ui_models.heroes_list.BaseHeroModel
 import com.heroes.model.ui_models.heroes_list.HeroModel
 import com.heroes.model.ui_models.heroes_list.HeroSeparatorModel
@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class DashboardViewModel(private val heroesRepositoryImpl: HeroesRepositoryImpl) : ViewModel() {
+class DashboardViewModel(private val heroesRepository: HeroesRepository) : ViewModel() {
 
     private val _uiState = MutableStateFlow(UiState())
     val uiState = _uiState.asStateFlow()
@@ -80,7 +80,7 @@ class DashboardViewModel(private val heroesRepositoryImpl: HeroesRepositoryImpl)
 
     private fun getHeroesByName(name: String) = viewModelScope.launch(Dispatchers.IO) {
         submitSearchState(SearchState(name, _searchState.value.focused, true))
-        when (val response = heroesRepositoryImpl.getHeroesByNameWithSuggestions(name)) {
+        when (val response = heroesRepository.getHeroesByName(name)) {
             is NetworkResponse.Success -> {
                 val heroesList = response.body
                 if (heroesList.isEmpty()) {
@@ -100,7 +100,7 @@ class DashboardViewModel(private val heroesRepositoryImpl: HeroesRepositoryImpl)
     }
 
     private fun getSuggestedHeroesList() = viewModelScope.launch(Dispatchers.IO) {
-        when (val response = heroesRepositoryImpl.getSuggestedHeroesList()) {
+        when (val response = heroesRepository.getSuggestedHeroesList()) {
             is NetworkResponse.Success -> {
                 val heroesList = response.body
                 val heroesListWithSeparation = createHeroListWithSeparation(heroesList)

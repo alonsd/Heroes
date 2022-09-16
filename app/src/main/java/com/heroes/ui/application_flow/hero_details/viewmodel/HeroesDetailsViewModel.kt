@@ -3,6 +3,7 @@ package com.heroes.ui.application_flow.hero_details.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.haroldadmin.cnradapter.NetworkResponse
+import com.heroes.data.repository.HeroesDetailsRepository
 import com.heroes.data.repository.HeroesDetailsRepositoryImpl
 import com.heroes.model.ui_models.hero_details.HeroDetailsModel
 import com.heroes.model.ui_models.heroes_list.HeroModel
@@ -15,7 +16,7 @@ import kotlinx.coroutines.launch
 
 class HeroesDetailsViewModel(
     heroListModel: HeroModel,
-    private val heroesDetailsRepositoryImpl: HeroesDetailsRepositoryImpl
+    private val heroesDetailsRepository: HeroesDetailsRepository
 ) : ViewModel() {
 
     private val internalUiState = MutableStateFlow(UiState())
@@ -44,7 +45,7 @@ class HeroesDetailsViewModel(
 
 
     private fun getAdditionalHeroDetails(heroId: String) = viewModelScope.launch {
-        when (val response = heroesDetailsRepositoryImpl.getHeroDetails(heroId)) {
+        when (val response = heroesDetailsRepository.getHeroDetails(heroId)) {
             is NetworkResponse.Success -> {
                 val heroDetailsModel = response.body
                 val showHeroPlaceOfBirth = heroDetailsModel.placeOfBirth.length >= 2
