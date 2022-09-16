@@ -7,8 +7,7 @@ class HeroesRepositoryImpl(private val remoteHeroDataSource: RemoteHeroDataSourc
     override suspend fun getHeroesByNameWithSuggestions(name: String) =
         remoteHeroDataSource.getHeroesByNameWithSuggestions(name)
 
-    override suspend fun getSuggestedHeroesList(addSeparation: Boolean) =
-        remoteHeroDataSource.getSuggestedHeroesList(addSeparation)
+    override suspend fun getSuggestedHeroesList() = remoteHeroDataSource.getSuggestedHeroesList()
 
 }
 

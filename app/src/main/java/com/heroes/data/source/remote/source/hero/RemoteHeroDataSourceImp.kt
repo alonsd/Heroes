@@ -21,22 +21,23 @@ class RemoteHeroDataSourceImp(private val heroesApi: HeroesApi) : RemoteHeroData
 
 
     override suspend fun getHeroesByNameWithSuggestions(name: String): NetworkResponse<*, String> {
-        val suggestedHeroesResult = getSuggestedHeroesList(false)
-        if (suggestedHeroesResult is NetworkResponse.Error) return suggestedHeroesResult
+//        val suggestedHeroesResult = getSuggestedHeroesList()
+//        if (suggestedHeroesResult is NetworkResponse.Error) return suggestedHeroesResult
         val heroesResult = getHeroesByName(name)
         if (heroesResult is NetworkResponse.Error) return heroesResult
         if ((heroesResult as NetworkResponse.Success).body.response != SUCCESS_RESULT_RESPONSE) {
             return NetworkResponse.Success(emptyList<BaseHeroModel>(), code = SUCCESS_RESULT_CODE)
         }
-        val suggestedHeroesList = (suggestedHeroesResult as NetworkResponse.Success).body as List<HeroModel>
-        val heroesListsWithSeparationModels = createHeroListWithSeparation(suggestedHeroesList)
-        heroesResult.body.heroesList.forEach { hero ->
-            val id = hero.id
-            val imageUrl = hero.image.url
-            val heroName = hero.name
-            heroesListsWithSeparationModels.add(HeroModel(id, heroName, imageUrl))
-        }
-        return NetworkResponse.Success(heroesListsWithSeparationModels, code = SUCCESS_RESULT_CODE)
+        return NetworkResponse.Success(heroesResult, code = SUCCESS_RESULT_CODE)
+//        val suggestedHeroesList = (suggestedHeroesResult as NetworkResponse.Success).body as List<HeroModel>
+//        val heroesListsWithSeparationModels = createHeroListWithSeparation(suggestedHeroesList)
+//        heroesResult.body.heroesList.forEach { hero ->
+//            val id = hero.id
+//            val imageUrl = hero.image.url
+//            val heroName = hero.name
+//            heroesListsWithSeparationModels.add(HeroModel(id, heroName, imageUrl))
+//        }
+//        return NetworkResponse.Success(heroesListsWithSeparationModels, code = SUCCESS_RESULT_CODE)
     }
 
     /**
@@ -44,53 +45,38 @@ class RemoteHeroDataSourceImp(private val heroesApi: HeroesApi) : RemoteHeroData
      * suggested heroes list combined with the search query results. If true, this means we are only showing the
      * recommended heroes and should add separation ViewHolders.
      */
-    override suspend fun getSuggestedHeroesList(addSeparation: Boolean): NetworkResponse<*, String> {
-        val suggestedHeroesList = mutableListOf<Deferred<NetworkResponse<*, String>>>()
+    override suspend fun getSuggestedHeroesList(): NetworkResponse<List<BaseHeroModel>, String> {
+        //TODO - continue from here, removing the internal call to this function and the boolean
+        val suggestedHeroesList = mutableListOf<Deferred<NetworkResponse<HeroModel, String>>>()
         coroutineScope {
             DefaultData.SUGGESTED_HEROES_LIST.forEach { heroName ->
-                val hero = async { getHeroesListContainingName(heroName) }
+                val hero = async { getHero(heroName) }
                 suggestedHeroesList.add(hero)
             }
         }
         val suggestedHeroes = mutableListOf<HeroModel>()
-        val awaitAll = suggestedHeroesList.awaitAll()
-        awaitAll.forEach { networkResponse ->
-            if (networkResponse is NetworkResponse.Error) return networkResponse
-            val element = (networkResponse as NetworkResponse.Success).body as List<HeroModel>
-            /*Response could be more then 1 hero when fetching data but we assume that
-            when given an exact name we will get only one result and it will be correct.*/
-            suggestedHeroes.add(element[0])
+        suggestedHeroesList.awaitAll().forEach { networkResponse ->
+            if (networkResponse is NetworkResponse.Error) return@forEach
+            val hero = (networkResponse as NetworkResponse.Success).body
+            suggestedHeroes.add(hero)
         }
-        if (addSeparation.not())
-            return NetworkResponse.Success(suggestedHeroes, code = SUCCESS_RESULT_CODE)
-        val heroesListWithSeparation = createHeroListWithSeparation(suggestedHeroes)
-        return NetworkResponse.Success(heroesListWithSeparation, code = SUCCESS_RESULT_CODE)
+        return NetworkResponse.Success(suggestedHeroes, code = SUCCESS_RESULT_CODE)
     }
 
     private suspend fun getHeroesByName(name: String) = heroesApi.getHeroesByName(NetworkConstants.TOKEN, name)
 
-    private fun createHeroListWithSeparation(suggestedHeroesResult: List<HeroModel>): MutableList<BaseHeroModel> {
-        val heroesListsModels = mutableListOf<BaseHeroModel>()
-        heroesListsModels.add(0, HeroSeparatorModel(HeroesListSeparatorType.SUGGESTIONS))
-        heroesListsModels.addAll(suggestedHeroesResult)
-        heroesListsModels.add(HeroSeparatorModel(HeroesListSeparatorType.SEARCH))
-        return heroesListsModels
-    }
-
-    private suspend fun getHeroesListContainingName(name: String): NetworkResponse<*, String> {
+    private suspend fun getHero(name: String): NetworkResponse<HeroModel, String> {
         val heroesResult = getHeroesByName(name)
-        if (heroesResult is NetworkResponse.Error) return heroesResult
-        if ((heroesResult as NetworkResponse.Success).body.response != SUCCESS_RESULT_RESPONSE) {
+        if (heroesResult is NetworkResponse.Error) return NetworkResponse.ServerError(body = null, code = 400)
+        val responseNotSuccessful = (heroesResult as NetworkResponse.Success).body.response != SUCCESS_RESULT_RESPONSE
+        if (responseNotSuccessful || heroesResult.body.heroesList.isEmpty()) {
             return NetworkResponse.UnknownError(Throwable(App.instance.getString(R.string.remote_hero_data_source_hero_not_found)))
         }
-        val heroesListsModels = mutableListOf<HeroModel>()
-        heroesResult.body.heroesList.forEach { hero ->
-            val id = hero.id
-            val imageUrl = hero.image.url
-            val heroName = hero.name
-            heroesListsModels.add(HeroModel(id, heroName, imageUrl))
-        }
-        return NetworkResponse.Success(heroesListsModels, code = SUCCESS_RESULT_CODE)
+        //We assume that only one hero exists with the exact same name so we take the first in the list
+        val id = heroesResult.body.heroesList[0].id
+        val imageUrl = heroesResult.body.heroesList[0].image.url
+        val heroName = heroesResult.body.heroesList[0].name
+        return NetworkResponse.Success(HeroModel(id, heroName, imageUrl), code = SUCCESS_RESULT_CODE)
     }
 
 

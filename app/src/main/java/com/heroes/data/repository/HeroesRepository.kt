@@ -6,5 +6,5 @@ interface HeroesRepository {
 
     suspend fun getHeroesByNameWithSuggestions(name: String) : NetworkResponse<*, String>
 
-    suspend fun getSuggestedHeroesList(addSeparation: Boolean) : NetworkResponse<*, String>
+    suspend fun getSuggestedHeroesList() : NetworkResponse<*, String>
 }
