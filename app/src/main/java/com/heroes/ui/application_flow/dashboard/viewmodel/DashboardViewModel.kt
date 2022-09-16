@@ -82,12 +82,13 @@ class DashboardViewModel(private val heroesRepositoryImpl: HeroesRepositoryImpl)
         submitSearchState(SearchState(name, _searchState.value.focused, true))
         when (val response = heroesRepositoryImpl.getHeroesByNameWithSuggestions(name)) {
             is NetworkResponse.Success -> {
-                val heroesList = response.body as List<HeroModel>
+                val heroesList = response.body
                 if (heroesList.isEmpty()) {
                     clearListToDefaultState()
                     return@launch
                 }
-                submitUiState(UiState(state = UiState.State.Data, heroesList = heroesList))
+                val searchResultsWithSuggestedHeroes = suggestedHeroes.toMutableList().apply { addAll(heroesList) }
+                submitUiState(UiState(state = UiState.State.Data, heroesList = searchResultsWithSuggestedHeroes))
             }
 
             is NetworkResponse.Error -> {
@@ -101,7 +102,7 @@ class DashboardViewModel(private val heroesRepositoryImpl: HeroesRepositoryImpl)
     private fun getSuggestedHeroesList() = viewModelScope.launch(Dispatchers.IO) {
         when (val response = heroesRepositoryImpl.getSuggestedHeroesList()) {
             is NetworkResponse.Success -> {
-                val heroesList = response.body as List<HeroModel>
+                val heroesList = response.body
                 val heroesListWithSeparation = createHeroListWithSeparation(heroesList)
                 suggestedHeroes.addAll(heroesListWithSeparation)
                 submitUiState(UiState(state = UiState.State.Data, heroesList = heroesListWithSeparation))
