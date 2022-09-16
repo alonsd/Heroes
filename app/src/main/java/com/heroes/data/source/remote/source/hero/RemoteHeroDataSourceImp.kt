@@ -1,15 +1,14 @@
 package com.heroes.data.source.remote.source.hero
 
+import com.haroldadmin.cnradapter.NetworkResponse
 import com.heroes.R
-import com.heroes.data.source.remote.api.HeroesApi
-import com.heroes.model.ui_models.heroes_list.BaseHeroModel
-import com.heroes.model.ui_models.heroes_list.HeroModel
 import com.heroes.core.App
 import com.heroes.core.constants.DefaultData
 import com.heroes.core.constants.NetworkConstants
-import com.heroes.core.constants.NetworkConstants.SUCCESS_RESULT_RESPONSE
-import com.haroldadmin.cnradapter.NetworkResponse
 import com.heroes.core.constants.NetworkConstants.SUCCESS_RESULT_CODE
+import com.heroes.core.constants.NetworkConstants.SUCCESS_RESULT_RESPONSE
+import com.heroes.data.source.remote.api.HeroesApi
+import com.heroes.model.ui_models.heroes_list.HeroModel
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -19,7 +18,7 @@ class RemoteHeroDataSourceImp(private val heroesApi: HeroesApi) : RemoteHeroData
 
 
     override suspend fun getHeroesByName(name: String): NetworkResponse<List<HeroModel>, String> {
-        val heroesResult = getAllHeroesWithName(name)
+        val heroesResult = getAllHeroesContainingName(name)
         if (heroesResult is NetworkResponse.Error)
             return NetworkResponse.ServerError(
             code = 400,
@@ -38,7 +37,7 @@ class RemoteHeroDataSourceImp(private val heroesApi: HeroesApi) : RemoteHeroData
         val suggestedHeroesList = mutableListOf<Deferred<NetworkResponse<HeroModel, String>>>()
         coroutineScope {
             DefaultData.SUGGESTED_HEROES_LIST.forEach { heroName ->
-                val hero = async { getFirstHeroWithName(heroName) }
+                val hero = async { getFirstHeroContainingName(heroName) }
                 suggestedHeroesList.add(hero)
             }
         }
@@ -51,10 +50,10 @@ class RemoteHeroDataSourceImp(private val heroesApi: HeroesApi) : RemoteHeroData
         return NetworkResponse.Success(suggestedHeroes, code = SUCCESS_RESULT_CODE)
     }
 
-    private suspend fun getAllHeroesWithName(name: String) = heroesApi.getHeroesByName(NetworkConstants.TOKEN, name)
+    private suspend fun getAllHeroesContainingName(name: String) = heroesApi.getHeroesByName(NetworkConstants.TOKEN, name)
 
-    private suspend fun getFirstHeroWithName(name: String): NetworkResponse<HeroModel, String> {
-        val heroesResult = getAllHeroesWithName(name)
+    private suspend fun getFirstHeroContainingName(name: String): NetworkResponse<HeroModel, String> {
+        val heroesResult = getAllHeroesContainingName(name)
         if (heroesResult is NetworkResponse.Error) return NetworkResponse.ServerError(body = null, code = 400)
         val responseNotSuccessful = (heroesResult as NetworkResponse.Success).body.response != SUCCESS_RESULT_RESPONSE
         if (responseNotSuccessful || heroesResult.body.heroesList.isEmpty()) {
