@@ -4,8 +4,8 @@ import com.haroldadmin.cnradapter.NetworkResponse
 
 interface RemoteHeroDataSource {
 
-    suspend fun getHeroesByNameWithSuggestions(name: String): NetworkResponse<*, String>
+    suspend fun getHeroesByName(name: String): NetworkResponse<*, String>
 
-    suspend fun getSuggestedHeroesList(addSeparation: Boolean): NetworkResponse<*, String>
+    suspend fun getSuggestedHeroesList(): NetworkResponse<*, String>
 
 }
