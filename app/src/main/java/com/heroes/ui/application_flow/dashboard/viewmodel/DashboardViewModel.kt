@@ -137,12 +137,12 @@ class DashboardViewModel(private val heroesRepositoryImpl: HeroesRepositoryImpl)
         _uiEvent.emit(uiEvent)
     }
 
-    sealed class UiEvent {
-        data class SearchQueryChanged(val searchText: String) : UiEvent()
-        data class SearchBarFocusChanged(val searchBarFocused: Boolean) : UiEvent()
-        data class ListIsScrolling(val listIsScrolling: Boolean) : UiEvent()
-        data class ListItemClicked(val heroModel: HeroModel) : UiEvent()
-        object ClearQueryClicked : UiEvent()
+    sealed interface UiEvent {
+        data class SearchQueryChanged(val searchText: String) : UiEvent
+        data class SearchBarFocusChanged(val searchBarFocused: Boolean) : UiEvent
+        data class ListIsScrolling(val listIsScrolling: Boolean) : UiEvent
+        data class ListItemClicked(val heroModel: HeroModel) : UiEvent
+        object ClearQueryClicked : UiEvent
     }
 
     data class UiState(
@@ -157,7 +157,7 @@ class DashboardViewModel(private val heroesRepositoryImpl: HeroesRepositoryImpl)
         }
     }
 
-    sealed class UiAction {
-        data class NavigateToHeroesDetails(val heroModel: HeroModel) : UiAction()
+    sealed interface UiAction {
+        data class NavigateToHeroesDetails(val heroModel: HeroModel) : UiAction
     }
 }

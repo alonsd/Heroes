@@ -71,8 +71,8 @@ class HeroesDetailsViewModel(
 
     fun submitEvent(uiEvent: UiEvent) = viewModelScope.launch { mutableUiEvent.emit(uiEvent) }
 
-    sealed class UiEvent {
-        object FloatingActionButtonClicked : UiEvent()
+    sealed interface UiEvent {
+        object FloatingActionButtonClicked : UiEvent
     }
 
     data class UiState(
@@ -88,8 +88,8 @@ class HeroesDetailsViewModel(
         }
     }
 
-    sealed class UiAction {
-        object ShareHeroesDetails : UiAction()
+    sealed interface UiAction {
+        object ShareHeroesDetails : UiAction
     }
 }
 
