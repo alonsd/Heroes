@@ -46,7 +46,7 @@ class HeroesDetailsViewModel(
     private fun getAdditionalHeroDetails(heroId: String) = viewModelScope.launch {
         when (val response = heroesDetailsRepositoryImpl.getHeroDetails(heroId)) {
             is NetworkResponse.Success -> {
-                val heroDetailsModel = response.body as HeroDetailsModel
+                val heroDetailsModel = response.body
                 val showHeroPlaceOfBirth = heroDetailsModel.placeOfBirth.length >= 2
                 val uiState = internalUiState.value.copy(
                     heroDetailsModel = heroDetailsModel,
