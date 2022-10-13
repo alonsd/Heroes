@@ -1,5 +1,6 @@
 package com.heroes.core.ui.search
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -35,14 +36,37 @@ fun SearchTextFieldPreview() {
     )
 }
 
+@Preview
+@Composable
+fun SearchBarShimmerPreview() {
+    SearchBarShimmerTextField()
+}
+
+@Composable
+fun SearchBarShimmerTextField() {
+    SearchTextField(
+        childModifier = Modifier.background(Color.Gray),
+        searchState = SearchState(
+            "",
+            focused = false,
+            searching = false
+        ),
+        onSearchQueryChanged = { },
+        onSearchFocusChanged = { },
+        onClearQueryClicked = { },
+        focusRequester = FocusRequester(),
+    )
+}
+
 @Composable
 fun SearchTextField(
-    modifier: Modifier = Modifier,
+    rootModifier: Modifier = Modifier,
+    childModifier: Modifier? = null,
     searchState: SearchState,
     onSearchQueryChanged: (String) -> Unit,
     onSearchFocusChanged: (Boolean) -> Unit,
     onClearQueryClicked: () -> Unit,
-    focusRequester : FocusRequester,
+    focusRequester: FocusRequester,
     focusManager: FocusManager = LocalFocusManager.current
 ) {
     val focused = searchState.focused
@@ -54,7 +78,7 @@ fun SearchTextField(
     }
 
     Surface(
-        modifier = modifier
+        modifier = rootModifier
             .then(
                 Modifier
                     .height(56.dp)
@@ -72,11 +96,11 @@ fun SearchTextField(
 
             Box(
                 contentAlignment = Alignment.CenterStart,
-                modifier = modifier
+                modifier = childModifier ?: rootModifier
             ) {
 
                 if (query.isEmpty()) {
-                    SearchHint(modifier = modifier.padding(start = 24.dp, end = 8.dp))
+                    SearchHint(modifier = rootModifier.padding(start = 24.dp, end = 8.dp))
                 }
 
                 Row(verticalAlignment = Alignment.CenterVertically) {

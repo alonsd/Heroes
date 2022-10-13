@@ -14,7 +14,7 @@ import com.valentinilk.shimmer.ShimmerTheme
 import com.valentinilk.shimmer.rememberShimmer
 
 @Composable
-fun defaultHeroesShimmering(
+fun heroesShimmer(
     duration: Int = 600,
     delay: Int = 300
 ): Shimmer {

@@ -1,4 +1,4 @@
-package com.heroes.ui.application_flow.dashboard.screen
+package com.heroes.ui.application_flow.dashboard.state.data
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
