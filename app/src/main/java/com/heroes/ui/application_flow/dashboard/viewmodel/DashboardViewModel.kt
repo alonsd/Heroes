@@ -44,14 +44,17 @@ class DashboardViewModel(private val heroesRepository: HeroesRepository) : ViewM
                     getHeroesByName(event.searchText)
                 }
                 is UiEvent.SearchBarFocusChanged -> {
-                    submitSearchState(SearchState(_uiState.value.searchState.query, event.searchBarFocused, _uiState.value.searchState.searching))
+                    submitUiState(_uiState.value.copy(
+                        searchState = _uiState.value.searchState.copy(focused = event.searchBarFocused)
+                    ))
                 }
                 is UiEvent.ListIsScrolling -> {
                     val searchStateFocused = _uiState.value.searchState.focused
                     if (searchStateFocused.not() || event.listIsScrolling.not()) return@collect
-                    submitSearchState(SearchState(_uiState.value.searchState.query, false, _uiState.value.searchState.searching))
+                    submitUiState(_uiState.value.copy(
+                        searchState = _uiState.value.searchState.copy(focused = false)
+                    ))
                 }
-
                 UiEvent.ClearQueryClicked -> {
                     clearListToDefaultState()
                 }
@@ -59,16 +62,12 @@ class DashboardViewModel(private val heroesRepository: HeroesRepository) : ViewM
         }
     }
 
-    private fun submitSearchState(searchState: SearchState) = viewModelScope.launch {
-        _uiState.update {
-            it.copy(searchState = searchState)
-        }
-    }
-
-
     private fun clearListToDefaultState() = viewModelScope.launch {
-        submitSearchState(SearchState("", _uiState.value.searchState.focused, false))
-        _uiState.emit(UiState(state = UiState.State.Data, heroesList = suggestedHeroes))
+        submitUiState(_uiState.value.copy(
+            state = UiState.State.Data,
+            heroesList = suggestedHeroes,
+            searchState = _uiState.value.searchState.copy(query = "", searching = false)
+        ))
     }
 
     private fun navigateToHeroDetails(heroModel: HeroModel) =
