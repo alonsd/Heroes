@@ -11,7 +11,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.heroes.core.ui.shimmering.DefaultHeroesShimmering
+import com.heroes.core.ui.shimmering.defaultHeroesShimmering
 import com.valentinilk.shimmer.shimmer
 
 @Composable
@@ -20,7 +20,7 @@ fun DashboardScreenLoadingState() {
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
-            .shimmer(DefaultHeroesShimmering())
+            .shimmer(defaultHeroesShimmering())
     ) {
         LazyColumn {
             items(20) {

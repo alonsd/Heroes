@@ -8,7 +8,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.heroes.R
 import com.heroes.core.extensions.shareInformationAsText
-import com.heroes.core.ui.loading.GeneralLoadingState
 import com.heroes.model.ui_models.heroes_list.HeroModel
 import com.heroes.ui.application_flow.hero_details.viewmodel.HeroesDetailsViewModel
 import com.ramcosta.composedestinations.annotation.Destination
@@ -49,7 +48,7 @@ fun HeroDetailsScreen(
 
         }
         HeroesDetailsViewModel.UiState.State.Initial -> {
-            GeneralLoadingState()
+
         }
     }
 }

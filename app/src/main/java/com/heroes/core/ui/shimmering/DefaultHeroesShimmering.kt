@@ -14,15 +14,18 @@ import com.valentinilk.shimmer.ShimmerTheme
 import com.valentinilk.shimmer.rememberShimmer
 
 @Composable
-fun DefaultHeroesShimmering(): Shimmer {
+fun defaultHeroesShimmering(
+    duration: Int = 600,
+    delay: Int = 300
+): Shimmer {
     return rememberShimmer(
         shimmerBounds = ShimmerBounds.View,
         theme = ShimmerTheme(
             animationSpec = infiniteRepeatable(
                 animation = tween(
-                    600,
+                    duration,
                     easing = LinearEasing,
-                    delayMillis = 300,
+                    delayMillis = delay,
                 ),
                 repeatMode = RepeatMode.Restart,
             ),
