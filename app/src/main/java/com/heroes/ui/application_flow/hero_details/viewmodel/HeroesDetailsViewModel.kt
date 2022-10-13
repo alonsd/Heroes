@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.haroldadmin.cnradapter.NetworkResponse
 import com.heroes.data.repository.HeroesDetailsRepository
-import com.heroes.data.repository.HeroesDetailsRepositoryImpl
 import com.heroes.model.ui_models.hero_details.HeroDetailsModel
 import com.heroes.model.ui_models.heroes_list.HeroModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -19,17 +18,17 @@ class HeroesDetailsViewModel(
     private val heroesDetailsRepository: HeroesDetailsRepository
 ) : ViewModel() {
 
-    private val internalUiState = MutableStateFlow(UiState())
-    val uiState = internalUiState.asStateFlow()
+    private val _uiState = MutableStateFlow(UiState())
+    val uiState = _uiState.asStateFlow()
 
-    private val internalUiAction = MutableSharedFlow<UiAction>()
-    val uiAction = internalUiAction.asSharedFlow()
+    private val _uiAction = MutableSharedFlow<UiAction>()
+    val uiAction = _uiAction.asSharedFlow()
 
-    private val mutableUiEvent = MutableSharedFlow<UiEvent>()
-    private val uiEvent = mutableUiEvent.asSharedFlow()
+    private val _uiEvent = MutableSharedFlow<UiEvent>()
+    private val uiEvent = _uiEvent.asSharedFlow()
 
     init {
-        getAdditionalHeroDetails(heroListModel.id)
+        getAdditionalHeroDetails(heroListModel)
         observeUiEvents()
     }
 
@@ -44,33 +43,35 @@ class HeroesDetailsViewModel(
     }
 
 
-    private fun getAdditionalHeroDetails(heroId: String) = viewModelScope.launch {
-        when (val response = heroesDetailsRepository.getHeroDetails(heroId)) {
+    private fun getAdditionalHeroDetails(hero: HeroModel) = viewModelScope.launch {
+        when (val response = heroesDetailsRepository.getHeroDetails(hero.id)) {
             is NetworkResponse.Success -> {
                 val heroDetailsModel = response.body
                 val showHeroPlaceOfBirth = heroDetailsModel.placeOfBirth.length >= 2
-                val uiState = internalUiState.value.copy(
+                val uiState = _uiState.value.copy(
                     heroDetailsModel = heroDetailsModel,
-                    showHeroPlaceOfBirth = showHeroPlaceOfBirth, state = UiState.State.Data
+                    showHeroPlaceOfBirth = showHeroPlaceOfBirth, state = UiState.State.Data,
+                    heroImage = hero.image,
+                    heroName = hero.name
                 )
-                internalUiState.emit(uiState)
+                _uiState.emit(uiState)
             }
 
             is NetworkResponse.Error -> {
                 val message = response.error.message ?: return@launch
-                val uiState = internalUiState.value.copy(
-                    errorMessage = message
-                    , state = UiState.State.Data
+                val uiState = _uiState.value.copy(
+                    errorMessage = message,
+                    state = UiState.State.Data
                 )
-                internalUiState.emit(uiState)
+                _uiState.emit(uiState)
             }
             else -> Unit
         }
     }
 
-    private fun submitAction(uiAction: UiAction) = viewModelScope.launch { internalUiAction.emit(uiAction) }
+    private fun submitAction(uiAction: UiAction) = viewModelScope.launch { _uiAction.emit(uiAction) }
 
-    fun submitEvent(uiEvent: UiEvent) = viewModelScope.launch { mutableUiEvent.emit(uiEvent) }
+    fun submitEvent(uiEvent: UiEvent) = viewModelScope.launch { _uiEvent.emit(uiEvent) }
 
     sealed interface UiEvent {
         object FloatingActionButtonClicked : UiEvent
@@ -79,6 +80,8 @@ class HeroesDetailsViewModel(
     data class UiState(
         val heroDetailsModel: HeroDetailsModel = HeroDetailsModel("", emptyList()),
         val showHeroPlaceOfBirth: Boolean = true,
+        val heroImage : String = "",
+        val heroName : String = "",
         val errorMessage: String = "",
         val state: State = State.Initial
     ) {

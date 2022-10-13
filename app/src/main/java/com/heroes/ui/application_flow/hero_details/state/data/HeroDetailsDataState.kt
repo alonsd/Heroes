@@ -1,4 +1,4 @@
-package com.heroes.ui.application_flow.hero_details.screen
+package com.heroes.ui.application_flow.hero_details.state.data
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -13,19 +13,26 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.heroes.R
 import com.heroes.core.ui.search.StandardText
-import com.heroes.model.ui_models.heroes_list.HeroModel
+import com.heroes.model.ui_models.hero_details.HeroDetailsCardModel
+import com.heroes.model.ui_models.hero_details.HeroDetailsModel
 import com.heroes.ui.application_flow.hero_details.list_item.HeroDetailsCardItem
-import com.heroes.ui.application_flow.hero_details.viewmodel.HeroesDetailsViewModel
 
 @Composable
-fun HeroDetailsDataState(model: HeroModel, uiState: HeroesDetailsViewModel.UiState, viewModel: HeroesDetailsViewModel) {
+fun HeroDetailsDataState(
+    imageUrl : String,
+    heroName: String,
+    showHeroPlaceOfBirth : Boolean,
+    heroDetailsModel : HeroDetailsModel,
+    onFloatingActionButtonClicked : () -> Unit
+) {
     Scaffold(floatingActionButton = {
         FloatingActionButton(onClick = {
-            viewModel.submitEvent(HeroesDetailsViewModel.UiEvent.FloatingActionButtonClicked)
+            onFloatingActionButtonClicked()
         }) {
             Icon(Icons.Filled.Add, "")
         }
@@ -38,7 +45,7 @@ fun HeroDetailsDataState(model: HeroModel, uiState: HeroesDetailsViewModel.UiSta
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Image(
-                painter = rememberAsyncImagePainter(model = model.image),
+                painter = rememberAsyncImagePainter(model = imageUrl),
                 contentDescription = null,
                 Modifier
                     .wrapContentSize()
@@ -46,22 +53,34 @@ fun HeroDetailsDataState(model: HeroModel, uiState: HeroesDetailsViewModel.UiSta
             )
             StandardText(
                 Modifier.padding(18.dp),
-                text = model.name,
+                text = heroName,
             )
-            if (uiState.showHeroPlaceOfBirth) {
+            if (showHeroPlaceOfBirth) {
                 StandardText(
                     Modifier.padding(32.dp),
                     text = stringResource(
                         id = R.string.hero_details_screen_place_of_birth,
-                        uiState.heroDetailsModel.placeOfBirth
+                        heroDetailsModel.placeOfBirth
                     )
                 )
             }
             LazyRow {
-                items(uiState.heroDetailsModel.heroDetailsCardModels) { heroModel ->
+                items(heroDetailsModel.heroDetailsCardModels) { heroModel ->
                     HeroDetailsCardItem(model = heroModel)
                 }
             }
         }
     }
+}
+
+@Composable
+@Preview(showBackground = true)
+fun HeroDetailsDataStatePreview() {
+    HeroDetailsDataState("", "Batman", true,
+    HeroDetailsModel("England", listOf(
+        HeroDetailsCardModel("title", "subtitle", "description"),
+        HeroDetailsCardModel("title", "subtitle", "description"),
+        HeroDetailsCardModel("title", "subtitle", "description"))),
+        onFloatingActionButtonClicked = {}
+    )
 }
