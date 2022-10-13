@@ -43,7 +43,6 @@ fun DashboardScreen(
 
         }
         DashboardViewModel.UiState.State.Initial -> {
-//            GeneralLoadingState()
             DashboardScreenLoadingState()
         }
     }
