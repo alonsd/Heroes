@@ -9,6 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.heroes.model.ui_models.heroes_list.HeroModel
@@ -17,7 +18,7 @@ import com.heroes.model.ui_models.heroes_list.HeroModel
 fun HeroesListItem(model: HeroModel, onClick: (heroModel: HeroModel) -> Unit) {
     Row(
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxWidth()
             .clickable {
                 onClick(model)
             }
@@ -37,6 +38,16 @@ fun HeroesListItem(model: HeroModel, onClick: (heroModel: HeroModel) -> Unit) {
             fontWeight = FontWeight.ExtraBold
         )
     }
+}
+
+@Preview
+@Composable
+fun HeroListItemPreview() {
+    HeroesListItem(
+        model = HeroModel(
+            "",
+            "Alon", ""
+        ), onClick = {})
 }
 
 

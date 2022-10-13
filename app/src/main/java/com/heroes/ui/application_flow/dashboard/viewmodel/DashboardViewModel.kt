@@ -10,10 +10,7 @@ import com.heroes.model.ui_models.heroes_list.HeroModel
 import com.heroes.model.ui_models.heroes_list.HeroSeparatorModel
 import com.heroes.model.ui_models.heroes_list.enums.HeroesListSeparatorType
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class DashboardViewModel(private val heroesRepository: HeroesRepository) : ViewModel() {
@@ -26,9 +23,6 @@ class DashboardViewModel(private val heroesRepository: HeroesRepository) : ViewM
 
     private val _uiEvent = MutableSharedFlow<UiEvent>()
     private val uiEvent = _uiEvent.asSharedFlow()
-
-    private val _searchState = MutableStateFlow(SearchState("", focused = false, searching = true))
-    val searchState = _searchState.asStateFlow()
 
     private val suggestedHeroes = mutableListOf<BaseHeroModel>()
 
@@ -50,14 +44,21 @@ class DashboardViewModel(private val heroesRepository: HeroesRepository) : ViewM
                     getHeroesByName(event.searchText)
                 }
                 is UiEvent.SearchBarFocusChanged -> {
-                    submitSearchState(SearchState(_searchState.value.query, event.searchBarFocused, _searchState.value.searching))
+                    submitUiState(
+                        _uiState.value.copy(
+                            searchState = _uiState.value.searchState.copy(focused = event.searchBarFocused)
+                        )
+                    )
                 }
                 is UiEvent.ListIsScrolling -> {
-                    val searchStateFocused = _searchState.value.focused
+                    val searchStateFocused = _uiState.value.searchState.focused
                     if (searchStateFocused.not() || event.listIsScrolling.not()) return@collect
-                    submitSearchState(SearchState(_searchState.value.query, false, _searchState.value.searching))
+                    submitUiState(
+                        _uiState.value.copy(
+                            searchState = _uiState.value.searchState.copy(focused = false)
+                        )
+                    )
                 }
-
                 UiEvent.ClearQueryClicked -> {
                     clearListToDefaultState()
                 }
@@ -65,21 +66,27 @@ class DashboardViewModel(private val heroesRepository: HeroesRepository) : ViewM
         }
     }
 
-    private fun submitSearchState(searchState: SearchState) = viewModelScope.launch {
-        _searchState.emit(searchState)
-    }
-
-
     private fun clearListToDefaultState() = viewModelScope.launch {
-        submitSearchState(SearchState("", _searchState.value.focused, false))
-        _uiState.emit(UiState(state = UiState.State.Data, heroesList = suggestedHeroes))
+        submitUiState(
+            _uiState.value.copy(
+                state = UiState.State.Data,
+                heroesList = suggestedHeroes,
+                searchState = _uiState.value.searchState.copy(query = "", searching = false)
+            )
+        )
     }
 
     private fun navigateToHeroDetails(heroModel: HeroModel) =
         submitAction(UiAction.NavigateToHeroesDetails(heroModel))
 
     private fun getHeroesByName(name: String) = viewModelScope.launch(Dispatchers.IO) {
-        submitSearchState(SearchState(name, _searchState.value.focused, true))
+        submitUiState(
+            _uiState.value.copy(
+                searchState = _uiState.value.searchState.copy(
+                    query = name, searching = true
+                )
+            )
+        )
         when (val response = heroesRepository.getHeroesByName(name)) {
             is NetworkResponse.Success -> {
                 val heroesList = response.body
@@ -88,14 +95,20 @@ class DashboardViewModel(private val heroesRepository: HeroesRepository) : ViewM
                     return@launch
                 }
                 val searchResultsWithSuggestedHeroes = suggestedHeroes.toMutableList().apply { addAll(heroesList) }
-                submitUiState(UiState(state = UiState.State.Data, heroesList = searchResultsWithSuggestedHeroes))
+                submitUiState(
+                    _uiState.value.copy(
+                        state = UiState.State.Data,
+                        heroesList = searchResultsWithSuggestedHeroes,
+                        searchState = _uiState.value.searchState.copy(searching = false)
+                    )
+                )
             }
 
             is NetworkResponse.Error -> {
                 val message = response.error.message ?: return@launch
                 submitUiState(UiState(errorMessage = message, state = UiState.State.Error))
             }
-            else -> {}
+            else -> Unit
         }
     }
 
@@ -105,12 +118,24 @@ class DashboardViewModel(private val heroesRepository: HeroesRepository) : ViewM
                 val heroesList = response.body
                 val heroesListWithSeparation = createHeroListWithSeparation(heroesList)
                 suggestedHeroes.addAll(heroesListWithSeparation)
-                submitUiState(UiState(state = UiState.State.Data, heroesList = heroesListWithSeparation))
+                submitUiState(
+                    _uiState.value.copy(
+                        state = UiState.State.Data,
+                        heroesList = heroesListWithSeparation,
+                        searchState = _uiState.value.searchState.copy(searching = false)
+                    )
+                )
             }
 
             is NetworkResponse.Error -> {
                 val message = response.error.message ?: return@launch
-                submitUiState(UiState(errorMessage = message, state = UiState.State.Error))
+                submitUiState(
+                    _uiState.value.copy(
+                        state = UiState.State.Error,
+                        searchState = _uiState.value.searchState.copy(searching = false),
+                        errorMessage = message
+                    )
+                )
             }
             else -> {}
         }
@@ -128,9 +153,8 @@ class DashboardViewModel(private val heroesRepository: HeroesRepository) : ViewM
         _uiAction.emit(uiAction)
     }
 
-    private fun submitUiState(uiState: UiState) = viewModelScope.launch {
-        _uiState.emit(uiState)
-        submitSearchState(SearchState(_searchState.value.query, _searchState.value.focused, false))
+    private fun submitUiState(uiState: UiState) {
+        _uiState.update { uiState }
     }
 
     fun submitEvent(uiEvent: UiEvent) = viewModelScope.launch {
@@ -147,6 +171,7 @@ class DashboardViewModel(private val heroesRepository: HeroesRepository) : ViewM
 
     data class UiState(
         val heroesList: List<BaseHeroModel> = emptyList(),
+        val searchState: SearchState = SearchState("", focused = false, searching = true),
         val errorMessage: String = "",
         val state: State = State.Initial
     ) {

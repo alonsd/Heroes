@@ -185,6 +185,9 @@ dependencies {
     implementation 'io.github.raamcosta.compose-destinations:animations-core:1.5.1-beta'
     ksp 'io.github.raamcosta.compose-destinations:ksp:1.5.1-beta'
 
+    //Compose Shimmering
+    implementation 'com.valentinilk.shimmer:compose-shimmer:1.0.3'
+
 }
 
 kapt {

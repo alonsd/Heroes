@@ -1,5 +1,6 @@
 package com.heroes.core.ui.search
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -35,14 +36,37 @@ fun SearchTextFieldPreview() {
     )
 }
 
+@Preview
+@Composable
+fun SearchBarShimmerPreview() {
+    SearchBarShimmerTextField()
+}
+
+@Composable
+fun SearchBarShimmerTextField() {
+    SearchTextField(
+        shimmeringModifier = Modifier.background(Color.Gray),
+        searchState = SearchState(
+            "",
+            focused = false,
+            searching = false
+        ),
+        onSearchQueryChanged = { },
+        onSearchFocusChanged = { },
+        onClearQueryClicked = { },
+        focusRequester = FocusRequester(),
+    )
+}
+
 @Composable
 fun SearchTextField(
     modifier: Modifier = Modifier,
+    shimmeringModifier: Modifier? = null,
     searchState: SearchState,
     onSearchQueryChanged: (String) -> Unit,
     onSearchFocusChanged: (Boolean) -> Unit,
     onClearQueryClicked: () -> Unit,
-    focusRequester : FocusRequester,
+    focusRequester: FocusRequester,
     focusManager: FocusManager = LocalFocusManager.current
 ) {
     val focused = searchState.focused
@@ -72,7 +96,7 @@ fun SearchTextField(
 
             Box(
                 contentAlignment = Alignment.CenterStart,
-                modifier = modifier
+                modifier = shimmeringModifier ?: modifier
             ) {
 
                 if (query.isEmpty()) {
