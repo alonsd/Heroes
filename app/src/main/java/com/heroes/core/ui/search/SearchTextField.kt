@@ -45,7 +45,7 @@ fun SearchBarShimmerPreview() {
 @Composable
 fun SearchBarShimmerTextField() {
     SearchTextField(
-        childModifier = Modifier.background(Color.Gray),
+        shimmeringModifier = Modifier.background(Color.Gray),
         searchState = SearchState(
             "",
             focused = false,
@@ -60,8 +60,8 @@ fun SearchBarShimmerTextField() {
 
 @Composable
 fun SearchTextField(
-    rootModifier: Modifier = Modifier,
-    childModifier: Modifier? = null,
+    modifier: Modifier = Modifier,
+    shimmeringModifier: Modifier? = null,
     searchState: SearchState,
     onSearchQueryChanged: (String) -> Unit,
     onSearchFocusChanged: (Boolean) -> Unit,
@@ -78,7 +78,7 @@ fun SearchTextField(
     }
 
     Surface(
-        modifier = rootModifier
+        modifier = modifier
             .then(
                 Modifier
                     .height(56.dp)
@@ -96,11 +96,11 @@ fun SearchTextField(
 
             Box(
                 contentAlignment = Alignment.CenterStart,
-                modifier = childModifier ?: rootModifier
+                modifier = shimmeringModifier ?: modifier
             ) {
 
                 if (query.isEmpty()) {
-                    SearchHint(modifier = rootModifier.padding(start = 24.dp, end = 8.dp))
+                    SearchHint(modifier = modifier.padding(start = 24.dp, end = 8.dp))
                 }
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
