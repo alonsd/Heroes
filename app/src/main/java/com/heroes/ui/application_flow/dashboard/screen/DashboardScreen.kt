@@ -6,7 +6,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.tooling.preview.Preview
-import com.heroes.core.ui.loading.GeneralLoadingState
 import com.heroes.ui.application_flow.dashboard.viewmodel.DashboardViewModel
 import com.heroes.ui.application_flow.destinations.HeroDetailsScreenDestination
 import com.ramcosta.composedestinations.annotation.Destination
