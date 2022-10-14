@@ -9,6 +9,7 @@ import com.heroes.R
 import com.heroes.core.extensions.shareInformationAsText
 import com.heroes.model.ui_models.heroes_list.HeroModel
 import com.heroes.ui.application_flow.hero_details.state.data.HeroDetailsDataState
+import com.heroes.ui.application_flow.hero_details.state.loading.HeroDetailsLoadingState
 import com.heroes.ui.application_flow.hero_details.viewmodel.HeroesDetailsViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import org.koin.androidx.compose.koinViewModel
@@ -57,7 +58,7 @@ fun HeroDetailsScreen(
 
         }
         HeroesDetailsViewModel.UiState.State.Initial -> {
-
+            HeroDetailsLoadingState()
         }
     }
 }

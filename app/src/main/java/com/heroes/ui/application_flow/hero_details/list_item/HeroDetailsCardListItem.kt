@@ -24,7 +24,12 @@ import com.heroes.model.ui_models.hero_details.HeroDetailsCardModel
 @Preview
 @Composable
 fun HeroDetailsCardItemPreview() {
-    HeroDetailsCardItem(HeroDetailsCardModel("Appearance", "Eye Color", "Red"))
+    HeroDetailsCardItem(
+        HeroDetailsCardModel(
+            "Appearance", "Eye Color",
+            "Red"
+        )
+    )
 }
 
 @Composable
