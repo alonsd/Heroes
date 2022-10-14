@@ -29,11 +29,11 @@ import com.heroes.ui.application_flow.hero_details.list_item.HeroDetailsCardItem
 
 @Composable
 fun HeroDetailsDataState(
-    imageUrl : String,
+    imageUrl: String,
     heroName: String,
-    showHeroPlaceOfBirth : Boolean,
-    heroDetailsModel : HeroDetailsModel,
-    onFloatingActionButtonClicked : () -> Unit
+    showHeroPlaceOfBirth: Boolean,
+    heroDetailsModel: HeroDetailsModel,
+    onFloatingActionButtonClicked: () -> Unit
 ) {
     Scaffold(floatingActionButton = {
         FloatingActionButton(onClick = {
@@ -56,8 +56,7 @@ fun HeroDetailsDataState(
                     .build(),
                 placeholder = painterResource(R.drawable.ic_launcher),
                 contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.clip(CircleShape)
+                modifier = Modifier
                     .wrapContentSize()
                     .padding(16.dp)
             )
@@ -65,15 +64,13 @@ fun HeroDetailsDataState(
                 Modifier.padding(18.dp),
                 text = heroName,
             )
-            if (showHeroPlaceOfBirth) {
-                StandardText(
-                    Modifier.padding(32.dp),
-                    text = stringResource(
-                        id = R.string.hero_details_screen_place_of_birth,
-                        heroDetailsModel.placeOfBirth
-                    )
+            StandardText(
+                Modifier.padding(32.dp),
+                text = if (showHeroPlaceOfBirth.not()) "" else stringResource(
+                    id = R.string.hero_details_screen_place_of_birth,
+                    heroDetailsModel.placeOfBirth
                 )
-            }
+            )
             LazyRow {
                 items(heroDetailsModel.heroDetailsCardModels) { heroModel ->
                     HeroDetailsCardItem(model = heroModel)
@@ -86,11 +83,14 @@ fun HeroDetailsDataState(
 @Composable
 @Preview(showBackground = true)
 fun HeroDetailsDataStatePreview() {
-    HeroDetailsDataState("", "Batman", true,
-    HeroDetailsModel("England", listOf(
-        HeroDetailsCardModel("title", "subtitle", "description"),
-        HeroDetailsCardModel("title", "subtitle", "description"),
-        HeroDetailsCardModel("title", "subtitle", "description"))),
+    HeroDetailsDataState("", "Etrigan", true,
+        HeroDetailsModel(
+            "Hell", listOf(
+                HeroDetailsCardModel("Powerstats", "Eye Color", "Red"),
+                HeroDetailsCardModel("Appearance", "Durability", "100"),
+                HeroDetailsCardModel("Work", "Base", "Hell")
+            )
+        ),
         onFloatingActionButtonClicked = {}
     )
 }
