@@ -3,7 +3,6 @@ package com.heroes.ui.application_flow.hero_details.state.data
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
@@ -12,8 +11,6 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -39,7 +36,7 @@ fun HeroDetailsDataState(
         FloatingActionButton(onClick = {
             onFloatingActionButtonClicked()
         }) {
-            Icon(Icons.Filled.Add, "")
+            Icon(Icons.Filled.Add, null)
         }
     }) { padding ->
         Column(
@@ -84,7 +81,10 @@ fun HeroDetailsDataState(
 @Composable
 @Preview(showBackground = true)
 fun HeroDetailsDataStatePreview() {
-    HeroDetailsDataState("", "Etrigan", true,
+    HeroDetailsDataState(
+        "",
+        "Etrigan",
+        true,
         HeroDetailsModel(
             "Hell", listOf(
                 HeroDetailsCardModel("Powerstats", "Eye Color", "Red"),

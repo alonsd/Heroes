@@ -19,11 +19,11 @@ import org.koin.core.parameter.ParametersHolder
 @Destination
 @Composable
 fun HeroDetailsScreen(
-    model: HeroModel
-) {
-    val viewModel: HeroesDetailsViewModel = koinViewModel(
+    model: HeroModel,
+    viewModel: HeroesDetailsViewModel = koinViewModel(
         parameters = { ParametersHolder(mutableListOf(model)) }
     )
+) {
     val uiState by viewModel.uiState.collectAsState()
     val uiAction by viewModel.uiAction.collectAsState(initial = null)
 
