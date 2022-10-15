@@ -1,9 +1,6 @@
 package com.heroes.ui.application_flow.hero_details.list_item
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
@@ -24,15 +21,20 @@ import com.heroes.model.ui_models.hero_details.HeroDetailsCardModel
 @Preview
 @Composable
 fun HeroDetailsCardItemPreview() {
-    HeroDetailsCardItem(HeroDetailsCardModel("Appearance", "Eye Color", "Red"))
+    HeroDetailsCardItem(
+        HeroDetailsCardModel(
+            "Appearance", "Eye Color",
+            "Red"
+        )
+    )
 }
 
 @Composable
 fun HeroDetailsCardItem(model: HeroDetailsCardModel) {
     Card(
         modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentHeight()
+            .width(180.dp)
+            .height(150.dp)
             .padding(15.dp),
         backgroundColor = MaterialTheme.colors.primary,
         shape = RoundedCornerShape(15.dp),
