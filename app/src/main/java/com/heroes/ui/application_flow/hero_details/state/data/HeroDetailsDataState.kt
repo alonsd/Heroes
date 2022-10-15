@@ -57,8 +57,9 @@ fun HeroDetailsDataState(
                 placeholder = painterResource(R.drawable.ic_launcher),
                 contentDescription = null,
                 modifier = Modifier
-                    .wrapContentSize()
                     .padding(16.dp)
+                    .height(200.dp)
+                    .width(150.dp)
             )
             StandardText(
                 Modifier.padding(18.dp),
@@ -66,9 +67,9 @@ fun HeroDetailsDataState(
             )
             StandardText(
                 Modifier.padding(32.dp),
-                text = if (showHeroPlaceOfBirth.not()) "" else stringResource(
+                text = stringResource(
                     id = R.string.hero_details_screen_place_of_birth,
-                    heroDetailsModel.placeOfBirth
+                    if (showHeroPlaceOfBirth.not()) "-" else heroDetailsModel.placeOfBirth
                 )
             )
             LazyRow {

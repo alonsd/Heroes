@@ -13,8 +13,8 @@ import androidx.compose.ui.unit.dp
 fun HeroDetailsCardListShimmerItem() {
     Card(
         modifier = Modifier
-            .width(200.dp)
-            .height(200.dp)
+            .width(180.dp)
+            .height(150.dp)
             .padding(15.dp),
         backgroundColor = Color.Gray,
         shape = RoundedCornerShape(15.dp),

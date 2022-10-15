@@ -18,19 +18,15 @@ import com.valentinilk.shimmer.shimmer
 
 @Composable
 fun HeroDetailsLoadingState() {
-    Scaffold(floatingActionButton = {
-        FloatingActionButton(content = {}, onClick = {}, backgroundColor = Color.Gray)
-    }) { padding ->
+    Box {
         Column(
             Modifier
                 .fillMaxSize()
-                .padding(padding)
                 .background(Color.White)
                 .shimmer(heroesShimmer()),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
             Box(
                 modifier = Modifier
                     .padding(16.dp)
@@ -59,7 +55,15 @@ fun HeroDetailsLoadingState() {
                 }
             }
         }
+        FloatingActionButton(
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(16.dp),
+            content = {},
+            onClick = {},
+            backgroundColor = Color.Gray)
     }
+
 }
 
 @Preview
