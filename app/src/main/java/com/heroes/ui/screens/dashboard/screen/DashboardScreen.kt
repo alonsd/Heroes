@@ -15,7 +15,6 @@ import com.heroes.ui.screens.destinations.HeroDetailsScreenDestination
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import org.koin.androidx.compose.inject
 
 @RootNavGraph(start = true)
 @ExperimentalComposeUiApi
@@ -25,8 +24,7 @@ fun DashboardScreen(
     navigator: DestinationsNavigator,
     viewModel : DashboardViewModel = hiltViewModel()
 ) {
-//    val viewModel: DashboardViewModel by inject()
-//    val viewModel: DashboardViewModel by hiltViewModel()
+
     val uiState by viewModel.uiState.collectAsState()
 
     LaunchedEffect(key1 = "") {

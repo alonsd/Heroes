@@ -1,11 +1,13 @@
 package com.heroes.ui.screens.hero_details.viewmodel
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.haroldadmin.cnradapter.NetworkResponse
 import com.heroes.data.repository.HeroesDetailsRepository
 import com.heroes.model.ui_models.hero_details.HeroDetailsModel
 import com.heroes.model.ui_models.heroes_list.HeroModel
+import com.heroes.ui.screens.destinations.HeroDetailsScreenDestination
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,8 +18,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HeroesDetailsViewModel @Inject constructor(
-//    heroListModel: HeroModel,
-    private val heroesDetailsRepository: HeroesDetailsRepository
+    private val heroesDetailsRepository: HeroesDetailsRepository,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(UiState())
@@ -30,7 +32,8 @@ class HeroesDetailsViewModel @Inject constructor(
     private val uiEvent = _uiEvent.asSharedFlow()
 
     init {
-//        getAdditionalHeroDetails(heroListModel)
+        val heroModel = HeroDetailsScreenDestination.argsFrom(savedStateHandle)
+        getAdditionalHeroDetails(heroModel)
         observeUiEvents()
     }
 

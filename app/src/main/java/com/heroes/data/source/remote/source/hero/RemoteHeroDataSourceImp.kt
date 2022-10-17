@@ -3,7 +3,6 @@ package com.heroes.data.source.remote.source.hero
 import android.content.Context
 import com.haroldadmin.cnradapter.NetworkResponse
 import com.heroes.R
-import com.heroes.core.App
 import com.heroes.core.constants.DefaultData
 import com.heroes.core.constants.NetworkConstants
 import com.heroes.core.constants.NetworkConstants.SUCCESS_RESULT_CODE

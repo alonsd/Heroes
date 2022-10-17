@@ -8,24 +8,18 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.heroes.R
 import com.heroes.core.extensions.shareInformationAsText
-import com.heroes.model.ui_models.hero_details.HeroDetailsModel
 import com.heroes.model.ui_models.heroes_list.HeroModel
 import com.heroes.ui.screens.hero_details.state.data.HeroDetailsDataState
 import com.heroes.ui.screens.hero_details.state.loading.HeroDetailsLoadingState
 import com.heroes.ui.screens.hero_details.viewmodel.HeroesDetailsViewModel
 import com.ramcosta.composedestinations.annotation.Destination
-import dagger.hilt.android.AndroidEntryPoint
-import org.koin.androidx.compose.koinViewModel
-import org.koin.core.parameter.ParametersHolder
 
 
-@Destination
+@Destination(
+    navArgsDelegate = HeroModel::class
+)
 @Composable
 fun HeroDetailsScreen(
-    model: HeroModel,
-//    viewModel: HeroesDetailsViewModel = koinViewModel(
-//        parameters = { ParametersHolder(mutableListOf(model)) }
-//    )
     viewModel : HeroesDetailsViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -37,9 +31,9 @@ fun HeroDetailsScreen(
             val context = LocalContext.current
             val heroDetailsForSharing = stringResource(
                 R.string.hero_details_screen_hero_details_for_sharing,
-                model.name,
+                uiState.heroName,
                 uiState.heroDetailsModel.placeOfBirth,
-                model.image
+                uiState.heroImage
             )
             shareInformationAsText(heroDetailsForSharing, context)
         }
