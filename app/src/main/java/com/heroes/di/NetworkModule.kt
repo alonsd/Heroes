@@ -1,9 +1,12 @@
 package com.heroes.di
 
+import android.app.Application
+import android.content.Context
 import com.haroldadmin.cnradapter.NetworkResponseAdapterFactory
 import com.heroes.core.constants.NetworkConstants
 import com.heroes.data.source.remote.api.HeroesApi
 import com.heroes.data.source.remote.api.HeroesDetailsApi
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,14 +24,22 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideHeroesApi(retrofit: Retrofit) : HeroesApi{
-        return retrofit.create(HeroesApi::class.java)
+    fun provideApplicationContext(app: Application): Context {
+        return app
     }
+
     @Provides
     @Singleton
-    fun provideHeroesDetailsApi(retrofit: Retrofit) : HeroesDetailsApi{
+    fun provideHeroesApi(retrofit: Retrofit): HeroesApi {
+        return retrofit.create(HeroesApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideHeroesDetailsApi(retrofit: Retrofit): HeroesDetailsApi {
         return retrofit.create(HeroesDetailsApi::class.java)
     }
+
     @Provides
     @Singleton
     fun provideRetrofit(): Retrofit {
@@ -39,6 +50,7 @@ object NetworkModule {
             .client(provideOkHttpClient())
             .build()
     }
+
     @Provides
     @Singleton
     fun provideOkHttpClient(): OkHttpClient {

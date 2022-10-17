@@ -1,15 +1,12 @@
 package com.heroes.di
 
 import android.app.Application
-import android.content.Context
-import com.heroes.data.source.remote.api.HeroesApi
-import com.heroes.data.source.remote.api.HeroesDetailsApi
 import com.heroes.data.source.remote.source.hero.RemoteHeroDataSource
 import com.heroes.data.source.remote.source.hero.RemoteHeroDataSourceImp
 import com.heroes.data.source.remote.source.hero_details.RemoteHeroDetailsDataSource
 import com.heroes.data.source.remote.source.hero_details.RemoteHeroDetailsDataSourceImp
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
@@ -17,17 +14,19 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object RemoteDataSourceModule {
+abstract class RemoteDataSourceModule {
 
-    @Provides
+    @Binds
     @Singleton
-   fun provideRemoteHeroDataSource(heroesApi: HeroesApi, app: Application) : RemoteHeroDataSource {
-       return RemoteHeroDataSourceImp(heroesApi, app)
-   }
+    abstract fun bindRemoteHeroDataSource(
+        remoteHeroDataSourceImp: RemoteHeroDataSourceImp
+    ): RemoteHeroDataSource
 
-    @Provides
+    @Binds
     @Singleton
-   fun provideRemoteHeroDetailsDataSource(heroesDetailsApi: HeroesDetailsApi) : RemoteHeroDetailsDataSource {
-       return RemoteHeroDetailsDataSourceImp(heroesDetailsApi)
-   }
+    abstract fun bindRemoteHeroDetailsDataSource(
+        remoteHeroDetailsDataSourceImp: RemoteHeroDetailsDataSourceImp
+    ): RemoteHeroDetailsDataSource
+
+
 }
