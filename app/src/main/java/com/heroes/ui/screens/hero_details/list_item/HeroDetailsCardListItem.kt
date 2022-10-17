@@ -1,4 +1,4 @@
-package com.heroes.ui.application_flow.hero_details.list_item
+package com.heroes.ui.screens.hero_details.list_item
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape

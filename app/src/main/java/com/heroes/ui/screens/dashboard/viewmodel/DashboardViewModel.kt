@@ -1,4 +1,4 @@
-package com.heroes.ui.application_flow.dashboard.viewmodel
+package com.heroes.ui.screens.dashboard.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,11 +9,14 @@ import com.heroes.model.ui_models.heroes_list.BaseHeroModel
 import com.heroes.model.ui_models.heroes_list.HeroModel
 import com.heroes.model.ui_models.heroes_list.HeroSeparatorModel
 import com.heroes.model.ui_models.heroes_list.enums.HeroesListSeparatorType
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class DashboardViewModel(private val heroesRepository: HeroesRepository) : ViewModel() {
+@HiltViewModel
+class DashboardViewModel @Inject constructor(private val heroesRepository: HeroesRepository) : ViewModel() {
 
     private val _uiState = MutableStateFlow(UiState())
     val uiState = _uiState.asStateFlow()

@@ -5,8 +5,11 @@ import com.heroes.data.source.remote.api.HeroesDetailsApi
 import com.heroes.model.ui_models.hero_details.HeroDetailsCardModel
 import com.heroes.model.ui_models.hero_details.HeroDetailsModel
 import com.heroes.core.constants.NetworkConstants
+import javax.inject.Inject
 
-class RemoteHeroDetailsDataSourceImp(private val heroesDetailsApi: HeroesDetailsApi) : RemoteHeroDetailsDataSource {
+class RemoteHeroDetailsDataSourceImp @Inject constructor(
+    private val heroesDetailsApi: HeroesDetailsApi
+) : RemoteHeroDetailsDataSource {
 
 
     override suspend fun getHeroDetails(heroId: String): NetworkResponse<HeroDetailsModel, String> {

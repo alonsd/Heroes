@@ -1,17 +1,20 @@
-package com.heroes.ui.application_flow.hero_details.screen
+package com.heroes.ui.screens.hero_details.screen
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.heroes.R
 import com.heroes.core.extensions.shareInformationAsText
+import com.heroes.model.ui_models.hero_details.HeroDetailsModel
 import com.heroes.model.ui_models.heroes_list.HeroModel
-import com.heroes.ui.application_flow.hero_details.state.data.HeroDetailsDataState
-import com.heroes.ui.application_flow.hero_details.state.loading.HeroDetailsLoadingState
-import com.heroes.ui.application_flow.hero_details.viewmodel.HeroesDetailsViewModel
+import com.heroes.ui.screens.hero_details.state.data.HeroDetailsDataState
+import com.heroes.ui.screens.hero_details.state.loading.HeroDetailsLoadingState
+import com.heroes.ui.screens.hero_details.viewmodel.HeroesDetailsViewModel
 import com.ramcosta.composedestinations.annotation.Destination
+import dagger.hilt.android.AndroidEntryPoint
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.ParametersHolder
 
@@ -20,9 +23,10 @@ import org.koin.core.parameter.ParametersHolder
 @Composable
 fun HeroDetailsScreen(
     model: HeroModel,
-    viewModel: HeroesDetailsViewModel = koinViewModel(
-        parameters = { ParametersHolder(mutableListOf(model)) }
-    )
+//    viewModel: HeroesDetailsViewModel = koinViewModel(
+//        parameters = { ParametersHolder(mutableListOf(model)) }
+//    )
+    viewModel : HeroesDetailsViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val uiAction by viewModel.uiAction.collectAsState(initial = null)

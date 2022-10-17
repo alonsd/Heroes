@@ -1,4 +1,4 @@
-package com.heroes.ui.application_flow.hero_details.viewmodel
+package com.heroes.ui.screens.hero_details.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -6,15 +6,17 @@ import com.haroldadmin.cnradapter.NetworkResponse
 import com.heroes.data.repository.HeroesDetailsRepository
 import com.heroes.model.ui_models.hero_details.HeroDetailsModel
 import com.heroes.model.ui_models.heroes_list.HeroModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-
-class HeroesDetailsViewModel(
-    heroListModel: HeroModel,
+@HiltViewModel
+class HeroesDetailsViewModel @Inject constructor(
+//    heroListModel: HeroModel,
     private val heroesDetailsRepository: HeroesDetailsRepository
 ) : ViewModel() {
 
@@ -28,7 +30,7 @@ class HeroesDetailsViewModel(
     private val uiEvent = _uiEvent.asSharedFlow()
 
     init {
-        getAdditionalHeroDetails(heroListModel)
+//        getAdditionalHeroDetails(heroListModel)
         observeUiEvents()
     }
 

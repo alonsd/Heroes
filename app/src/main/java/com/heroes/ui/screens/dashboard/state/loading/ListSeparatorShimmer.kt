@@ -1,4 +1,4 @@
-package com.heroes.ui.application_flow.dashboard.state.loading
+package com.heroes.ui.screens.dashboard.state.loading
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

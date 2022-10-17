@@ -1,5 +1,6 @@
 package com.heroes.data.source.remote.source.hero
 
+import android.content.Context
 import com.haroldadmin.cnradapter.NetworkResponse
 import com.heroes.R
 import com.heroes.core.App
@@ -13,16 +14,21 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
+import javax.inject.Inject
 
-class RemoteHeroDataSourceImp(private val heroesApi: HeroesApi) : RemoteHeroDataSource {
+class RemoteHeroDataSourceImp @Inject constructor(
+    private val heroesApi: HeroesApi,
+    private val context: Context
+) : RemoteHeroDataSource {
 
 
     override suspend fun getHeroesByName(name: String): NetworkResponse<List<HeroModel>, String> {
         val heroesResult = getAllHeroesContainingName(name)
         if (heroesResult is NetworkResponse.Error)
             return NetworkResponse.ServerError(
-            code = 400,
-            body = heroesResult.error.localizedMessage ?: "")
+                code = 400,
+                body = heroesResult.error.localizedMessage ?: ""
+            )
         if ((heroesResult as NetworkResponse.Success).body.response != SUCCESS_RESULT_RESPONSE) {
             return NetworkResponse.Success(emptyList(), code = SUCCESS_RESULT_CODE)
         }
@@ -57,7 +63,7 @@ class RemoteHeroDataSourceImp(private val heroesApi: HeroesApi) : RemoteHeroData
         if (heroesResult is NetworkResponse.Error) return NetworkResponse.ServerError(body = null, code = 400)
         val responseNotSuccessful = (heroesResult as NetworkResponse.Success).body.response != SUCCESS_RESULT_RESPONSE
         if (responseNotSuccessful || heroesResult.body.heroesList.isEmpty()) {
-            return NetworkResponse.UnknownError(Throwable(App.instance.getString(R.string.remote_hero_data_source_hero_not_found)))
+            return NetworkResponse.UnknownError(Throwable(context.getString(R.string.remote_hero_data_source_hero_not_found)))
         }
         val id = heroesResult.body.heroesList[0].id
         val imageUrl = heroesResult.body.heroesList[0].image.url

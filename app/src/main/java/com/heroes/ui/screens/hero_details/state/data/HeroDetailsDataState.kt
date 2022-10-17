@@ -1,4 +1,4 @@
-package com.heroes.ui.application_flow.hero_details.state.data
+package com.heroes.ui.screens.hero_details.state.data
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -22,7 +22,7 @@ import com.heroes.R
 import com.heroes.core.ui.search.StandardText
 import com.heroes.model.ui_models.hero_details.HeroDetailsCardModel
 import com.heroes.model.ui_models.hero_details.HeroDetailsModel
-import com.heroes.ui.application_flow.hero_details.list_item.HeroDetailsCardItem
+import com.heroes.ui.screens.hero_details.list_item.HeroDetailsCardItem
 
 @Composable
 fun HeroDetailsDataState(

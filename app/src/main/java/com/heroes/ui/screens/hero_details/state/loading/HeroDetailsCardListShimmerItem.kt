@@ -1,4 +1,4 @@
-package com.heroes.ui.application_flow.hero_details.state.loading
+package com.heroes.ui.screens.hero_details.state.loading
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape

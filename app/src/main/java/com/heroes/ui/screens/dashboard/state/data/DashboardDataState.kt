@@ -1,4 +1,4 @@
-package com.heroes.ui.application_flow.dashboard.state.data
+package com.heroes.ui.screens.dashboard.state.data
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
@@ -17,8 +17,8 @@ import com.heroes.core.ui.search.SearchState
 import com.heroes.model.ui_models.heroes_list.BaseHeroModel
 import com.heroes.model.ui_models.heroes_list.HeroModel
 import com.heroes.model.ui_models.heroes_list.HeroSeparatorModel
-import com.heroes.ui.application_flow.dashboard.list_items.HeroesListItem
-import com.heroes.ui.application_flow.dashboard.list_items.HeroesListSeparatorItem
+import com.heroes.ui.screens.dashboard.list_items.HeroesListItem
+import com.heroes.ui.screens.dashboard.list_items.HeroesListSeparatorItem
 
 @ExperimentalComposeUiApi
 @Composable

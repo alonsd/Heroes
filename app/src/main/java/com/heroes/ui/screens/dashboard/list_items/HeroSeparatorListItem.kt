@@ -1,4 +1,4 @@
-package com.heroes.ui.application_flow.dashboard.list_items
+package com.heroes.ui.screens.dashboard.list_items
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row

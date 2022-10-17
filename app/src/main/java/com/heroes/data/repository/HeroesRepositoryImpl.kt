@@ -1,8 +1,9 @@
 package com.heroes.data.repository
 
-import com.heroes.data.source.remote.source.hero.RemoteHeroDataSourceImp
+import com.heroes.data.source.remote.source.hero.RemoteHeroDataSource
+import javax.inject.Inject
 
-class HeroesRepositoryImpl(private val remoteHeroDataSource: RemoteHeroDataSourceImp) : HeroesRepository {
+class HeroesRepositoryImpl @Inject constructor(private val remoteHeroDataSource: RemoteHeroDataSource) : HeroesRepository {
     
     override suspend fun getHeroesByName(name: String) =
         remoteHeroDataSource.getHeroesByName(name)
