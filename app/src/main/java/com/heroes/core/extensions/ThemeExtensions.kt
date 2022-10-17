@@ -5,7 +5,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import com.heroes.ui.theme.HeroesTheme
 
-fun ComponentActivity.setHeroesTheme(content: @Composable () -> Unit){
+fun ComponentActivity.setHeroesContent(content: @Composable () -> Unit){
     setContent {
         HeroesTheme {
             content()
