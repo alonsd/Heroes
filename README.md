@@ -16,6 +16,7 @@
 - [ ] Add unit & integration tests 
 - [ ] Migrate to gradle kts
 - [ ] Rebuilding the UI from a proffesional free Zeplyn / Figma tempalte 
+- [ ] Convert into a multi-module application 
 
 
 ### About
