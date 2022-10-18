@@ -1,14 +1,26 @@
 <img src="https://github.com/alonsd/BankHapoalimHeroes/blob/main/main_screen.jpeg" width="300"/> <img src="https://github.com/alonsd/BankHapoalimHeroes/blob/main/hero_details_screen.jpeg" width="300"/> 
 
-# Heroes
+# Heroes - Android Template Application 
 
-Compose MVI demonstration app. 
- 
+##### Features
 - [x] Architecture - Model-View-Intent(MVI). 
 - [x] UI Fully written in Compose
-- [x] Shimmering animation 
+- [x] Loading state with shimmering animation 
 - [x] Dependency Injection using Hilt.
 - [x] Networking using Retrofit + Coroutines.
+
+
+##### Roadmap and TODOs
+- [ ] Expand themeing 
+- [ ] Add unit & integration tests 
+- [ ] Migrate to gradle kts
+- [ ] Rebuilding the UI from a proffesional free Zeplyn / Figma tempalte 
+
+
+### About
+
+Heroes is a template application used to demonstrate the latest implementation & architecture in Android development. 
+
 
 ## Authors
 
