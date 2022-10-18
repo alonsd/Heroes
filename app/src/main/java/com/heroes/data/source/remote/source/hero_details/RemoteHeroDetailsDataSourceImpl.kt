@@ -7,7 +7,7 @@ import com.heroes.model.ui_models.hero_details.HeroDetailsModel
 import com.heroes.core.constants.NetworkConstants
 import javax.inject.Inject
 
-class RemoteHeroDetailsDataSourceImp @Inject constructor(
+class RemoteHeroDetailsDataSourceImpl @Inject constructor(
     private val heroesDetailsApi: HeroesDetailsApi
 ) : RemoteHeroDetailsDataSource {
 
