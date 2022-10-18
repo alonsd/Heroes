@@ -1,9 +1,9 @@
 package com.heroes.di
 
 import com.heroes.data.source.remote.source.hero.RemoteHeroDataSource
-import com.heroes.data.source.remote.source.hero.RemoteHeroDataSourceImp
+import com.heroes.data.source.remote.source.hero.RemoteHeroDataSourceImpl
 import com.heroes.data.source.remote.source.hero_details.RemoteHeroDetailsDataSource
-import com.heroes.data.source.remote.source.hero_details.RemoteHeroDetailsDataSourceImp
+import com.heroes.data.source.remote.source.hero_details.RemoteHeroDetailsDataSourceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -18,13 +18,13 @@ abstract class RemoteDataSourceModule {
     @Binds
     @Singleton
     abstract fun bindRemoteHeroDataSource(
-        remoteHeroDataSourceImp: RemoteHeroDataSourceImp
+        remoteHeroDataSourceImpl: RemoteHeroDataSourceImpl
     ): RemoteHeroDataSource
 
     @Binds
     @Singleton
     abstract fun bindRemoteHeroDetailsDataSource(
-        remoteHeroDetailsDataSourceImp: RemoteHeroDetailsDataSourceImp
+        remoteHeroDetailsDataSourceImpl: RemoteHeroDetailsDataSourceImpl
     ): RemoteHeroDetailsDataSource
 
 

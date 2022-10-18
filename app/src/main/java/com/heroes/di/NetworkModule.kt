@@ -1,7 +1,5 @@
 package com.heroes.di
 
-import android.app.Application
-import android.content.Context
 import com.haroldadmin.cnradapter.NetworkResponseAdapterFactory
 import com.heroes.core.constants.NetworkConstants
 import com.heroes.data.source.remote.api.HeroesApi
@@ -20,12 +18,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
-
-    @Provides
-    @Singleton
-    fun provideApplicationContext(app: Application): Context {
-        return app
-    }
 
     @Provides
     @Singleton

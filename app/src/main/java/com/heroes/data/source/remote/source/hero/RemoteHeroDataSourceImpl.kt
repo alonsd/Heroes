@@ -15,7 +15,7 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject
 
-class RemoteHeroDataSourceImp @Inject constructor(
+class RemoteHeroDataSourceImpl @Inject constructor(
     private val heroesApi: HeroesApi,
     private val context: Context
 ) : RemoteHeroDataSource {
