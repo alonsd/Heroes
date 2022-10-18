@@ -7,7 +7,7 @@ Compose MVI demonstration app.
 - [x] Architecture - Model-View-Intent(MVI). 
 - [x] UI Fully written in Compose
 - [x] Shimmering animation 
-- [x] Dependency Injection using Koin.
+- [x] Dependency Injection using Hilt.
 - [x] Networking using Retrofit + Coroutines.
 
 ## Authors
