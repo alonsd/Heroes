@@ -16,6 +16,7 @@
 - [ ] Add unit & integration tests 
 - [ ] Migrate to gradle kts
 - [ ] Rebuilding the UI from a proffesional free Zeplyn / Figma tempalte 
+- [ ] Support dynamic screen size 
 - [ ] Convert into a multi-module application 
 
 
