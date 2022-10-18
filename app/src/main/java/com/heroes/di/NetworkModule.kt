@@ -6,7 +6,6 @@ import com.haroldadmin.cnradapter.NetworkResponseAdapterFactory
 import com.heroes.core.constants.NetworkConstants
 import com.heroes.data.source.remote.api.HeroesApi
 import com.heroes.data.source.remote.api.HeroesDetailsApi
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

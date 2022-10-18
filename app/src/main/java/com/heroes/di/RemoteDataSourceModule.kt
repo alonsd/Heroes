@@ -1,6 +1,5 @@
 package com.heroes.di
 
-import android.app.Application
 import com.heroes.data.source.remote.source.hero.RemoteHeroDataSource
 import com.heroes.data.source.remote.source.hero.RemoteHeroDataSourceImp
 import com.heroes.data.source.remote.source.hero_details.RemoteHeroDetailsDataSource
