@@ -1,4 +1,4 @@
-<img src="https://github.com/alonsd/BankHapoalimHeroes/blob/main/main_screen.jpeg" width="300"/> <img src="https://github.com/alonsd/BankHapoalimHeroes/blob/main/hero_details_screen.jpeg" width="300"/> 
+<img src="https://github.com/alonsd/Heroes/blob/main/Dashboard.jpeg" width="300"/> <img src="https://github.com/alonsd/Heroes/blob/main/HeroDetails.jpeg" width="300"/> 
 
 
 #### Heroes - Android Template Application 
