@@ -2,7 +2,7 @@
 buildscript {
     ext {
         compose_version = '1.0.1'
-        ksp_version = "1.6.21-1.0.5"
+        ksp_version = "1.7.21-1.0.8"
     }
     repositories {
         google()
@@ -12,7 +12,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:7.3.1'
-        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:2.5.2"
+        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:2.5.3"
         classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.21'
     }
 }
