@@ -60,7 +60,7 @@ android {
         }
     }
 
-    //Used for automatically generated code for navigation library
+    //Used for compose navigation code generator
     applicationVariants.all {
         kotlin.sourceSets {
             getByName(name) {
